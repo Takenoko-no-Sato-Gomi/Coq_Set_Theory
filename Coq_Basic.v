@@ -1,7 +1,3 @@
-Axiom Sekai_no_Ssinri:False.
-
-
-
 (*排中律*)
 Axiom Law_of_Excluded_Middle:forall p:Prop,p\/~p.
 
@@ -343,12 +339,11 @@ Qed.
 
 
 (*分出公理*)
-Axiom Axiom_Schema_of_Separation:forall p:Set->Prop,forall x:Set,exists y:Set,forall z:Set,
-contain z y<->contain z x/\p z.
+Axiom Axiom_Schema_of_Separation:forall p:Set->Prop,forall x:Set,exists y:Set,forall z:Set,contain z y<->contain z x/\p z.
 
 Definition Prop_Set(P:Set->Prop):=Well_Defined(fun A=>forall x:Set,contain x A<->P x).
 
-Theorem Prop_Set_Law_1:forall P:Set->Prop,(exists A:Set,forall x:Set,P x->contain x A)->forall x:Set,contain x(Prop_Set P)<->P x.
+Theorem Prop_Set_Law_1:forall P:Set->Prop,(exists A:Set,forall x:Set,P x->contain x A)->forall x:Set,contain x (Prop_Set P)<->P x.
 Proof.
 intro.
 intro.
@@ -564,7 +559,21 @@ Qed.
 (*順序対*)
 Definition Ordered_Set(x y:Set):=Pair_Set (Pair_Set x y) (Single_Set y).
 
-Theorem Ordered_Set_Law_1:forall x y z w:Set,Ordered_Set x y=Ordered_Set z w<->x=z/\y=w.
+Theorem Ordered_Set_Law_1:forall x y z:Set,contain z (Ordered_Set x y)<->z=(Pair_Set x y)\/z=(Single_Set y).
+Proof.
+intros.
+split.
+intro.
+unfold Ordered_Set in H.
+apply Pair_Set_Law_1.
+apply H.
+intro.
+unfold Ordered_Set.
+apply Pair_Set_Law_1 in H.
+apply H.
+Qed.
+
+Theorem Ordered_Set_Law_2:forall x y z w:Set,Ordered_Set x y=Ordered_Set z w<->x=z/\y=w.
 Proof.
 intros.
 split.
@@ -1170,7 +1179,64 @@ Qed.
 
 
 
+(*有限直積*)
+Definition Double_Direct_Product_Set(X Y:Set):=Prop_Set(fun z=>exists x y:Set,Ordered_Set x y=z/\contain x X/\contain y Y).
+
+Theorem Double_Direct_Product_Set_Law_1:forall X Y z:Set,contain z (Double_Direct_Product_Set X Y)<->exists x y:Set,Ordered_Set x y=z/\contain x X/\contain y Y.
+Proof.
+intros.
+apply Prop_Set_Law_1.
+exists (Power_Set (Power_Set (Pair_Union_Set X Y))).
+intros.
+destruct H.
+destruct H.
+destruct H.
+destruct H0.
+apply Power_Set_Law_1.
+intro.
+intro.
+rewrite <- H in H2.
+apply Power_Set_Law_1.
+apply Ordered_Set_Law_1 in H2.
+intro.
+intro.
+apply Pair_Union_Set_Law_1.
+destruct H2.
+rewrite -> H2 in H3.
+apply Pair_Set_Law_1 in H3.
+destruct H3.
+left.
+rewrite -> H3.
+apply H0.
+right.
+rewrite -> H3.
+apply H1.
+rewrite -> H2 in H3.
+apply Single_Set_Law_1 in H3.
+right.
+rewrite -> H3.
+apply H1.
+Qed.
+
+Definition Double_Direct_Product(f X Y:Set):=forall a:Set,contain a f->exists x y:Set,a=Ordered_Set x y.
+
+Definition Double_Direct_Product_Prop(f x y:Set):=contain (Ordered_Set x y) f.
+
+
+
 (*写像*)
+Definition Map(f X Y:Set):=forall a:Set,contain a f->exists x:Set,exists! y:Set,a=Ordered_Set x y.
+
+Definition Culculateion_Map(f x:Set):=Well_Defined (fun y=>(Ordered_Set x y)=f).
+
+Theorem Map_Law_1:forall f X Y:Set,Map f X Y->forall x:Set,contain x X->exists! y:Set,contain y Y/\y=Culculateion_Map f x.
+Proof.
+intros.
+exists (Culculateion_Map f x).
+split.
+split.
+
+Qed.
 
 
 

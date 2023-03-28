@@ -314,7 +314,7 @@ Axiom Well_Defined:(Set->Prop)->Set.
 
 Axiom Definition_Well_defined:forall P:Set->Prop,((exists! y:Set,P y)/\P (Well_Defined P))\/(~(exists! y:Set,P y)/\Well_Defined P =_0).
 
-Theorem Well_Defined_1:forall P:Set->Prop,(exists! y : Set,P y)->P(Well_Defined P).
+Theorem Well_Defined_1:forall P:Set->Prop,(exists! y : Set,P y)->P (Well_Defined P).
 Proof.
 intros.
 destruct (Definition_Well_defined P).
@@ -1218,25 +1218,372 @@ rewrite -> H3.
 apply H1.
 Qed.
 
-Definition Double_Direct_Product(f X Y:Set):=forall a:Set,contain a f->exists x y:Set,a=Ordered_Set x y.
-
-Definition Double_Direct_Product_Prop(f x y:Set):=contain (Ordered_Set x y) f.
 
 
+(*関係*)
+Definition Relation_Prop(f x y:Set):=contain (Ordered_Set x y) f.
 
-(*写像*)
-Definition Map(f X Y:Set):=forall a:Set,contain a f->exists x:Set,exists! y:Set,a=Ordered_Set x y.
+Definition Reration(f X:Set):=forall a:Set,contain a f->exists x y:Set,a=Ordered_Set x y/\contain x X/\contain y X.
 
-Definition Culculateion_Map(f x:Set):=Well_Defined (fun y=>(Ordered_Set x y)=f).
+Definition Refrectiv_Law(f X:Set):=forall x:Set,contain x X->Relation_Prop f x x.
 
-Theorem Map_Law_1:forall f X Y:Set,Map f X Y->forall x:Set,contain x X->exists! y:Set,contain y Y/\y=Culculateion_Map f x.
+Definition Symmetric_Law(f X:Set):=forall x y:Set,Relation_Prop f x y->Relation_Prop f y x.
+
+Definition Transitive_Law(f X:Set):=forall x y z:Set,(Relation_Prop f x y/\Relation_Prop f y z)->Relation_Prop f x z.
+
+Definition Asymmetric_Law(f X:Set):=forall x y:Set,(Relation_Prop f x y/\Relation_Prop f y x)->x=y.
+
+Definition Totaly_Odered_Law(f X:Set):=forall x y:Set,(contain x X/\contain y X)->(Relation_Prop f x y\/Relation_Prop f y x).
+
+
+
+(*部分関係*)
+Definition Sub_Reration_Set(f Y:Set):=Prop_Set (fun a=>exists x y:Set,a=(Ordered_Set x y)/\contain x Y/\contain y Y/\contain a f).
+
+Theorem Sub_Reration_Law_1:forall f X Y:Set,(Reration f X/\Sub_Set Y X)->Reration (Sub_Reration_Set f Y) X.
 Proof.
 intros.
-exists (Culculateion_Map f x).
+destruct H.
+intro.
+intro.
+apply (Prop_Set_Law_1 (fun a=>exists x y:Set,a=(Ordered_Set x y)/\contain x Y/\contain y Y/\contain a f)) in H1.
+destruct H1.
+destruct H1.
+destruct H1.
+destruct H2.
+destruct H3.
+exists x.
+exists x0.
 split.
+apply H1.
+split.
+apply H0.
+apply H2.
+apply H0.
+apply H3.
+exists (Power_Set (Power_Set X)).
+intros.
+destruct H3.
+destruct H3.
+destruct H3.
+destruct H4.
+destruct H5.
+rewrite -> H3.
+apply Power_Set_Law_1.
+intro.
+intro.
+apply Power_Set_Law_1.
+intro.
+intro.
+apply Ordered_Set_Law_1 in H7.
+destruct H7.
+rewrite -> H7 in H8.
+apply Pair_Set_Law_1 in H8.
+destruct H8.
+rewrite -> H8.
+apply H0.
+apply H4.
+rewrite -> H8.
+apply H0.
+apply H5.
+rewrite -> H7 in H8.
+apply Single_Set_Law_1 in H8.
+rewrite -> H8.
+apply H0.
+apply H5.
+Qed.
+
+
+
+(*同値関係*)
+Definition Equivalenc_Relation(f X:Set):=Reration f X/\Refrectiv_Law f X/\Symmetric_Law f X/\Transitive_Law f X.
+
+Definition Equivalence_Class(f x:Set):=Prop_Set (fun y=>Relation_Prop f x y).
+
+Definition Quotient_Set(f X:Set):=Prop_Set (fun x'=>exists x:Set,contain x X/\x'=Equivalence_Class f x).
+
+Theorem Equivalence_Class_Law_1:forall f x y X:Set,(Equivalenc_Relation f X/\contain x (Equivalence_Class f y))->(Relation_Prop f x y).
+Proof.
+intros.
+destruct H.
+apply (Prop_Set_Law_1 (fun z=>Relation_Prop f y z)) in H0.
+destruct H.
+destruct H1.
+destruct H2.
+apply H2.
+apply H0.
+exists X.
+intros.
+destruct H.
+apply H in H2.
+destruct H2.
+destruct H2.
+destruct H2.
+destruct H4.
+apply Ordered_Set_Law_2 in H2.
+destruct H2.
+rewrite -> H6.
+apply H5.
+Qed.
+
+Theorem Equivalence_Class_Law_2:forall f x y X:Set,(Equivalenc_Relation f X/\(Relation_Prop f x y))->(contain x (Equivalence_Class f y)).
+Proof.
+intros.
+destruct H.
+destruct H.
+apply Prop_Set_Law_1.
+exists X.
+intros.
+apply H in H2.
+destruct H2.
+destruct H2.
+destruct H2.
+destruct H3.
+apply Ordered_Set_Law_2 in H2.
+destruct H2.
+rewrite -> H5.
+apply H4.
+destruct H1.
+destruct H2.
+apply H2.
+apply H0.
+Qed.
+
+Theorem Quotient_Set_Law_1:forall f X:Set,(Equivalenc_Relation f X/\~X=_0)->(X=Union_Set (Quotient_Set f X)).
+Proof.
+intros.
+destruct H.
+apply Empty_Set_Law_1 in H0.
+apply Theorem_of_Extensionality.
+intro.
 split.
 
+intro.
+apply Union_Set_Law_1.
+exists (Equivalence_Class f z).
+split.
+apply Prop_Set_Law_1.
+exists (Power_Set X).
+intros.
+apply Power_Set_Law_1.
+destruct H2.
+destruct H2.
+rewrite -> H3.
+intro.
+intro.
+apply (Prop_Set_Law_1 (fun y=>Relation_Prop f x0 y)) in H4.
+destruct H.
+apply H in H4.
+destruct H4.
+destruct H4.
+destruct H4.
+destruct H6.
+apply Ordered_Set_Law_2 in H4.
+destruct H4.
+rewrite -> H8.
+apply H7.
+exists X.
+intros.
+destruct H.
+apply H in H6.
+destruct H6.
+destruct H6.
+destruct H6.
+apply Ordered_Set_Law_2 in H6.
+destruct H6.
+rewrite -> H9.
+destruct H8.
+apply H10.
+exists z.
+split.
+apply H1.
+split.
+apply Prop_Set_Law_1.
+exists X.
+intros.
+destruct H.
+apply H in H2.
+destruct H2.
+destruct H2.
+destruct H2.
+apply Ordered_Set_Law_2 in H2.
+destruct H2.
+rewrite -> H5.
+destruct H4.
+apply H6.
+destruct H.
+destruct H2.
+apply H2.
+apply H1.
+
+intro.
+apply Union_Set_Law_1 in H1.
+destruct H1.
+destruct H1.
+apply (Prop_Set_Law_1 (fun x'=>exists x:Set,contain x X/\x'=Equivalence_Class f x)) in H1.
+destruct H1.
+destruct H1.
+rewrite -> H3 in H2.
+destruct H.
+apply (Prop_Set_Law_1 (fun y=>Relation_Prop f x0 y)) in H2.
+apply H in H2.
+destruct H2.
+destruct H2.
+destruct H2.
+destruct H5.
+apply Ordered_Set_Law_2 in H2.
+destruct H2.
+rewrite -> H7.
+apply H6.
+exists X.
+intros.
+apply H in H6.
+destruct H6.
+destruct H6.
+destruct H6.
+apply Ordered_Set_Law_2 in H6.
+destruct H6.
+rewrite -> H8.
+destruct H7.
+apply H9.
+exists (Power_Set X).
+intros.
+destruct H4.
+destruct H4.
+rewrite -> H5.
+apply Power_Set_Law_1.
+intro.
+intro.
+apply (Prop_Set_Law_1 (fun y=>Relation_Prop f x1 y)) in H6.
+destruct H.
+apply H in H6.
+destruct H6.
+destruct H6.
+destruct H6.
+apply Ordered_Set_Law_2 in H6.
+destruct H6.
+rewrite -> H9.
+apply H8.
+exists X.
+intros.
+destruct H.
+apply H in H8.
+destruct H8.
+destruct H8.
+destruct H8.
+apply Ordered_Set_Law_2 in H8.
+destruct H8.
+rewrite -> H11.
+apply H10.
 Qed.
+
+Theorem Quotient_Set_Law_2:forall f x y X:Set,(Equivalenc_Relation f X/\contain x X/\contain y X)->(~(Relation_Prop f x y)->Pair_Meet_Set (Equivalence_Class f x) (Equivalence_Class f y)=_0).
+Proof.
+intros.
+apply Theorem_of_Extensionality.
+intro.
+split.
+
+intro.
+apply Pair_Meet_Set_Law_1 in H1.
+destruct H1.
+assert (Equivalenc_Relation f X/\contain z (Equivalence_Class f x)).
+split.
+apply H.
+apply H1.
+apply Equivalence_Class_Law_1 in H3.
+assert (Equivalenc_Relation f X/\contain z (Equivalence_Class f y)).
+split.
+apply H.
+apply H2.
+apply Equivalence_Class_Law_1 in H4.
+destruct H0.
+destruct H.
+destruct H.
+destruct H5.
+destruct H6.
+assert (Relation_Prop f x z/\Relation_Prop f z y).
+split.
+apply H6.
+apply H3.
+apply H4.
+apply H7 in H8.
+apply H8.
+
+intro.
+destruct (Definition_of_Empty_Set z).
+apply H1.
+Qed.
+
+
+
+(*順序関係*)
+Definition Ordered_Relation(f X:Set):=Reration f X/\Refrectiv_Law f X/\Transitive_Law f X/\Asymmetric_Law f X.
+
+Definition Totaly_Ordered_Relation(f X:Set):=Ordered_Relation f X/\Totaly_Odered_Law f X.
+
+
+
+Definition Upper_Bound(f X a:Set):=(forall x:Set,contain x X/\Relation_Prop f x a).
+
+Definition Maximal_Element(f X a:Set):=contain a X/\(forall x:Set,~(Relation_Prop f a x/\~a=x)).
+
+Definition Maximum_Element(f X a:Set):=contain a X/\(forall x:Set,Relation_Prop f x a).
+
+
+
+Definition Lower_Bound(f X a:Set):=(forall x:Set,contain x X/\Relation_Prop f a x).
+
+Definition Minimal_Element(f X a:Set):=contain a X/\(forall x:Set,~(Relation_Prop f x a/\~a=x)).
+
+Definition Minimum_Element(f X a:Set):=contain a X/\(forall x:Set,Relation_Prop f a x).
+
+Theorem Ordered_Relation_Law_1:forall f X a:Set,(Ordered_Relation f X/\Maximum_Element f X a)->(Maximal_Element f X a).
+Proof.
+intros.
+split.
+destruct H.
+apply H0.
+intro.
+intro.
+destruct H0.
+apply H1.
+destruct H.
+destruct H.
+destruct H3.
+destruct H4.
+apply H5.
+split.
+apply H0.
+apply H2.
+Qed.
+
+Theorem Ordered_Relation_Law_2:forall f X a:Set,(Ordered_Relation f X/\Minimum_Element f X a)->(Minimal_Element f X a).
+Proof.
+intros.
+split.
+destruct H.
+apply H0.
+intro.
+intro.
+destruct H0.
+apply H1.
+destruct H.
+destruct H.
+destruct H3.
+destruct H4.
+apply H5.
+split.
+apply H2.
+apply H0.
+Qed.
+
+
+
+
+
+(*整列順序*)
+Definition Well_Oredered_Reration(f X:Set):=Totaly_Ordered_Relation f X/\(forall Y:Set,(Sub_Set Y X/\~_0=Y)->exists a:Set,Minimum_Element f Y a).
 
 
 
@@ -1244,14 +1591,151 @@ Qed.
 (*包含関係の順序的な次*)
 Definition Ordinal_Next(x:Set):=Pair_Union_Set x (Single_Set x).
 
+(*ノイマン順序数*)
 
 
 (*無限公理*)
-Axiom Axiom_of_Infinity:exists x : Set, contain Empty_set x /\ forall y : Set, contain y x
--> contain (Ordinal_Next y) x.
+Axiom Axiom_of_Infinity:exists x:Set,contain Empty_set x/\forall y:Set,contain y x->contain (Ordinal_Next y) x.
+
+
+
+(*写像*)
+Definition Map(f X Y:Set):=(forall a:Set,contain a f->exists x y:Set,contain x X/\contain y Y/\a=(Ordered_Set x y))/\(forall x:Set,contain x X->exists! y:Set,contain (Ordered_Set x y) f/\contain y Y).
+
+Definition Culculateion_Map(f x:Set):=Well_Defined (fun y=>contain (Ordered_Set x y) f).
+
+Theorem Map_Law_1:forall f X Y x:Set,Map f X Y/\contain x X->contain (Culculateion_Map f x) Y.
+Proof.
+intros.
+
+assert (contain (Ordered_Set x (Culculateion_Map f x)) f).
+unfold Culculateion_Map.
+apply Well_Defined_1.
+destruct H.
+destruct H.
+apply H1 in H0.
+destruct H0.
+destruct H0.
+exists x0.
+split.
+apply H0.
+intros.
+apply H2.
+split.
+apply H3.
+apply H in H3.
+destruct H3.
+destruct H3.
+destruct H3.
+destruct H4.
+apply Ordered_Set_Law_2 in H5.
+destruct H5.
+rewrite -> H6.
+apply H4.
+
+destruct H.
+destruct H.
+apply H in H0.
+destruct H0.
+destruct H0.
+destruct H0.
+destruct H3.
+apply Ordered_Set_Law_2 in H4.
+destruct H4.
+rewrite -> H5.
+apply H3.
+Qed.
+
+Theorem Map_Law_2:forall f X Y x:Set,(Map f x X/\contain x X)->contain (Ordered_Set x (Culculateion_Map f x)) f.
+Proof.
+intros.
+destruct H.
+destruct H.
+
+Qed.
+
+Theorem Map_Law_3:forall f h X Y:Set,(Map f X Y/\Map h X Y/\(forall x:Set,contain x X->(Culculateion_Map f x=Culculateion_Map h x))->f=h).
+Proof.
+intros.
+apply Theorem_of_Extensionality.
+intros.
+destruct H.
+destruct H0.
+
+split.
+intro.
+destruct H.
+apply H in H2.
+destruct H2.
+destruct H2.
+destruct H2.
+destruct H0.
+assert (contain x X).
+apply H2.
+apply H1 in H2.
+apply H5 in H6.
+destruct H6.
+destruct H6.
+destruct H6.
+destruct H4.
+rewrite -> H9.
+
+Qed.
+
+
+
+Definition Surjective_Function(f X Y:Set):=Map f X Y/\forall y:Set,contain y Y->exists x:Set,contain x X/\y=Culculateion_Map f x.
+
+Definition Injective_Function(f X Y:Set):=Map f X Y/\forall x1 x2:Set,(contain x1 X/\contain x2 X/\Culculateion_Map f x1=Culculateion_Map f x2)->x1=x2.
+
+Definition Bijective_Function(f X Y:Set):=Surjective_Function f X Y/\Injective_Function f X Y.
+
+
+
+Definition Map_Set(X Y:Set):=Prop_Set (fun f=>Map f X Y).
+
+Theorem Map_Set_Law_1:forall X Y f:Set,contain f (Map_Set X Y)<->Map f X Y.
+Proof.
+intros.
+apply (Prop_Set_Law_1 (fun f=>Map f X Y)).
+exists (Power_Set (Power_Set (Power_Set (Pair_Union_Set X Y)))).
+intros.
+apply Power_Set_Law_1.
+intro.
+intro.
+apply Power_Set_Law_1.
+intro.
+intro.
+apply Power_Set_Law_1.
+intro.
+intro.
+apply Pair_Union_Set_Law_1.
+destruct H.
+apply H in H0.
+destruct H0.
+destruct H0.
+destruct H0.
+destruct H4.
+rewrite -> H5 in H1.
+apply Ordered_Set_Law_1 in H1.
+destruct H1.
+rewrite -> H1 in H2.
+apply Pair_Set_Law_1 in H2.
+destruct H2.
+left.
+rewrite -> H2.
+apply H0.
+right.
+rewrite -> H2.
+apply H4.
+rewrite -> H1 in H2.
+apply Single_Set_Law_1 in H2.
+rewrite -> H2.
+right.
+apply H4.
+Qed.
 
 
 
 (*正則性公理*)
-Axiom Axiom_of_Regularity:forall A:Set,~A=_0->(exists x:Set,contain x A/\(forall t:Set,
-contain t A->(~contain t x))).
+Axiom Axiom_of_Regularity:forall A:Set,~A=_0->(exists x:Set,contain x A/\(forall t:Set,contain t A->(~contain t x))).

@@ -980,16 +980,7 @@ apply H12.
 
 intros.
 apply H5.
-destruct H6.
-assert (forall z:Set,contain z x->exists o:Set,contain o O/\(z=Pair_Meet_Set Y o)).
-intros.
-apply H5.
-apply H6.
-apply H8.
-apply H8.
-exists (Union_Set (Prop_Set (fun o_y=>exists o:Set,contain o O/\(o_y=Pair_Meet_Set Y o)))).
-split.
-apply .
+
 Qed.
 
 

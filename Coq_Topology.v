@@ -446,6 +446,7 @@ apply H6.
 apply H8.
 Qed.
 
+
 Theorem Open_Base_Law_3:forall X O B:Set,(Open_Set_Family O X/\Open_Base X O B)->(forall b1 b2 p:Set,(b1 ∈ B/\b2 ∈ B/\p ∈ (b1 ∩ b2))->exists b:Set,b ∈ B/\p ∈ b/\b ⊂ (b1 ∩ b2)).
 Proof.
 intro.
@@ -738,15 +739,14 @@ apply H12.
 intros.
 destruct H2.
 apply H1.
-exists (Union_Set (Prop_Set (fun b=>exists a:Set,b ⊂ B/\a=Union_Set b/\a ∈ B))).
-assert (forall A:Set,A ∈ (Prop_Set (fun b=>exists a:Set,b ⊂ B/\a=Union_Set b/\a ∈ B))<->exists a:Set,A ⊂ B/\a=Union_Set A/\a ∈ B).
+exists (Union_Set (Prop_Set (fun B0=>B0 ⊂ B/\exists a:Set,a ∈ x/\a=Union_Set B0))).
+assert (forall A:Set,A ∈ (Prop_Set (fun B0=>B0 ⊂ B/\exists a:Set,a ∈ x/\a=Union_Set B0))<->A ⊂ B/\exists a:Set,a ∈ x/\a=Union_Set A).
 intro.
 apply Prop_Set_Law_1.
 exists (Power_Set B).
 intros.
 destruct H4.
-destruct H4.
-apply  Power_Set_Law_1.
+apply Power_Set_Law_1.
 apply H4.
 split.
 intro.
@@ -755,7 +755,6 @@ apply Union_Set_Law_1 in H5.
 destruct H5.
 destruct H5.
 apply H4 in H5.
-destruct H5.
 destruct H5.
 apply H5.
 apply H6.
@@ -767,16 +766,51 @@ apply Union_Set_Law_1.
 apply Union_Set_Law_1 in H5.
 destruct H5.
 destruct H5.
+assert (x0 ∈ x).
+apply H5.
 apply H2 in H5.
 apply H1 in H5.
 destruct H5.
 destruct H5.
-rewrite -> H7 in H6.
+rewrite -> H8 in H6.
 apply Union_Set_Law_1 in H6.
 destruct H6.
 destruct H6.
-
-
+exists x2.
+split.
+apply Union_Set_Law_1.
+exists x1.
+split.
+apply H4.
+split.
+apply H5.
+exists x0.
+split.
+apply H7.
+apply H8.
+apply H6.
+apply H9.
+intros.
+apply Union_Set_Law_1 in H5.
+destruct H5.
+destruct H5.
+apply Union_Set_Law_1 in H5.
+destruct H5.
+destruct H5.
+apply H4 in H5.
+destruct H5.
+destruct H8.
+destruct H8.
+apply Union_Set_Law_1.
+exists x2.
+split.
+apply H8.
+rewrite -> H9.
+apply Union_Set_Law_1.
+exists x0.
+split.
+apply H7.
+apply H6.
 Qed.
 
 
@@ -844,90 +878,86 @@ destruct H8.
 apply H8.
 Qed.
 
-Theorem Interior_Set_Law_3:forall x O X:Set,(Open_Set_Family O X/\x ⊂ X)->(x ∈ O<->x=Interior_Set x O).
+Theorem  Interior_Set_Law_3:forall x O X:Set,(Open_Set_Family O X/\x ∈ O)->x=Interior_Set x O.
 Proof.
 intros.
-destruct H.
-unfold Open_Set_Family in H.
-destruct H.
-destruct H1.
-destruct H2.
-destruct H3.
-split.
-intro.
 apply Axiom_of_Extensionality.
-intro.
 split.
 intro.
-unfold Interior_Set.
+destruct H.
 apply Union_Set_Law_1.
 exists x.
 split.
 apply Prop_Set_Law_1.
 exists O.
 intros.
-destruct H7.
-apply H7.
-split.
-apply H5.
-intro.
-intro.
-apply H7.
-apply H6.
-intro.
-apply (Interior_Set_Law_2 x O X) in H6.
-apply H6.
-split.
-unfold Open_Set_Family.
-split.
-apply H.
-split.
-apply H1.
-split.
+destruct H2.
 apply H2.
 split.
-apply H3.
-apply H4.
-apply H0.
-
+apply H1.
 intro.
-rewrite -> H5.
-apply H4.
+intro.
+apply H2.
+apply H0.
+intros.
+apply Union_Set_Law_1 in H0.
+destruct H0.
+destruct H0.
+apply (Prop_Set_Law_1 (fun y=>y ∈ O/\y ⊂ x)) in H0.
+destruct H0.
+apply H2.
+apply H1.
+exists O.
+intros.
+destruct H3.
+apply H3.
+Qed.
+
+Theorem Interior_Set_Law_4:forall x O X:Set,(Open_Set_Family O X/\x=Interior_Set x O/\x ⊂ X)->x ∈ O.
+Proof.
+intros.
+destruct H.
+destruct H0.
+rewrite -> H0.
+destruct H.
+destruct H2.
+destruct H3.
+destruct H4.
+apply H5.
 split.
 intro.
 intro.
-apply (Prop_Set_Law_1 (fun y:Set=>y ∈ O/\y ⊂ x)) in H6.
+apply (Prop_Set_Law_1 (fun y=>y ∈ O/\y ⊂ x)) in H6.
 destruct H6.
 apply H6.
 exists O.
-intro.
-intro.
+intros.
 destruct H8.
+apply H7.
+exists O.
+intros.
+destruct H10.
+apply H10.
+apply Prop_Set_Law_1.
+exists O.
+intros.
+destruct H10.
+apply H10.
+split.
 apply H8.
+apply H9.
 apply Empty_Set_Law_1.
-exists x.
+exists (∅).
 apply Prop_Set_Law_1.
 exists O.
 intros.
 destruct H6.
 apply H6.
 split.
-rewrite -> H5.
-apply (Interior_Set_Law_1 x O X).
-split.
-unfold Open_Set_Family.
-split.
-apply H.
-split.
-apply H1.
-split.
 apply H2.
-split.
-apply H3.
-apply H4.
-apply H0.
 intro.
 intro.
+destruct (Definition_of_Empty_Set z).
 apply H6.
 Qed.
 
@@ -1002,101 +1032,101 @@ destruct H8.
 apply H8.
 Qed.
 
-Theorem Closure_Set_Law_3:forall x C X:Set,(Close_Set_Family C X/\x ⊂ X)->(x ∈ C<->x=Closure_Set x C).
+Theorem Closure_Set_Law_3:forall x C X:Set,(Close_Set_Family C X/\x ∈ C)->x=Closure_Set x C.
 Proof.
 intros.
 destruct H.
-unfold Close_Set_Family in H.
-destruct H.
-destruct H1.
-destruct H2.
-destruct H3.
-split.
-intro.
 apply Axiom_of_Extensionality.
 intro.
 split.
 intro.
-unfold Closure_Set.
 apply Meet_Set_Law_1.
 apply Empty_Set_Law_1.
 exists x.
 apply Prop_Set_Law_1.
 exists C.
 intros.
-destruct H7.
-apply H7.
+destruct H2.
+apply H2.
 split.
-apply H5.
+apply H0.
 intro.
 intro.
-apply H7.
+apply H2.
 intros.
-apply (Prop_Set_Law_1 (fun y:Set=>y ∈ C/\x ⊂ y)) in H7.
-destruct H7.
-apply H8.
-apply H6.
+apply (Prop_Set_Law_1 (fun y : Set => y ∈ C /\ x ⊂ y)) in H2.
+destruct H2.
+apply H3.
+apply H1.
 exists C.
 intros.
-destruct H9.
-apply H9.
-intro.
-unfold Closure_Set in H6.
-assert (forall A:Set,A ∈ (Prop_Set (fun y:Set=>y ∈ C/\x ⊂ y))->z ∈ A).
-apply Meet_Set_Law_1.
+destruct H4.
+apply H4.
+intros.
+assert (~Prop_Set (fun y : Set => y ∈ C /\ x ⊂ y)=∅).
 apply Empty_Set_Law_1.
 exists x.
-apply (Prop_Set_Law_1 (fun y:Set=>y ∈ C/\x ⊂ y)).
+apply Prop_Set_Law_1.
 exists C.
 intros.
-destruct H7.
-apply H7.
+destruct H2.
+apply H2.
 split.
-apply H5.
+apply H0.
 intro.
 intro.
-apply H7.
-apply H6.
-apply H7.
-apply (Prop_Set_Law_1 (fun y:Set=>y ∈ C/\x ⊂ y)).
-exists C.
-intros.
-destruct H8.
-apply H8.
-split.
-apply H5.
+apply H2.
+specialize (Meet_Set_Law_1).
 intro.
-intro.
-apply H8.
-
-intro.
-rewrite -> H5.
+specialize (H3 (Prop_Set (fun y : Set => y ∈ C /\ x ⊂ y))).
+specialize (H3 H2).
+assert (forall A:Set,A ∈ Prop_Set (fun y=>y ∈ C/\x ⊂ y)->z ∈ A).
+apply H3.
+apply H1.
 apply H4.
+apply Prop_Set_Law_1.
+exists C.
+intros.
+destruct H5.
+apply H5.
+split.
+apply H0.
+intro.
+intro.
+apply H5.
+Qed.
+
+Theorem Closure_Set_Law_4:forall x C X:Set,(Close_Set_Family C X/\x=Closure_Set x C/\x ⊂ X)->x ∈ C.
+Proof.
+intros.
+destruct H.
+destruct H0.
+rewrite -> H0.
+destruct H.
+destruct H2.
+destruct H3.
+destruct H4.
+apply H5.
 split.
 intro.
 intro.
-apply (Prop_Set_Law_1 (fun y:Set=>y ∈ C/\x ⊂ y)) in H6.
+apply (Prop_Set_Law_1 (fun y : Set => y ∈ C /\ x ⊂ y)) in H6.
 destruct H6.
 apply H6.
-apply H7 in H6.
-exists C.
-intros.
-destruct H8.
-apply H8.
 exists C.
 intros.
 destruct H8.
 apply H8.
 apply Empty_Set_Law_1.
 exists X.
-apply (Prop_Set_Law_1 (fun y:Set=>y ∈ C/\x ⊂ y)).
+apply Prop_Set_Law_1.
 exists C.
 intros.
 destruct H6.
 apply H6.
 split.
-apply H2.
-apply H0.
+apply H3.
+apply H1.
 Qed.
 
 
@@ -1615,8 +1645,3 @@ split.
 apply H9.
 apply H11.
 Qed.
-
-
-
-
-

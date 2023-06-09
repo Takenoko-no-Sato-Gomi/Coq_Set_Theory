@@ -161,7 +161,7 @@ destruct H8.
 destruct H7.
 destruct H10.
 assert (Identify_Element f X=x0).
-assert (forall x:Set,x ∈ X->((Identify_Element f X) ∈ X/\Oparation f x (Identify_Element f X)=x/\Oparation f (Identify_Element f X) x=x)).
+assert (forall x:Set,contain x X->((Identify_Element f X) ∈ X/\Oparation f x (Identify_Element f X)=x/\Oparation f (Identify_Element f X) x=x)).
 apply Monoid_Law_3.
 apply Monoid_Law_1.
 apply H1.
@@ -194,7 +194,7 @@ apply H7.
 apply H2 in H15.
 rewrite -> H11 in H14.
 rewrite -> H11 in H15.
-assert (forall x:Set,x ∈ X->((Identify_Element f X) ∈ X/\Oparation f x (Identify_Element f X)=x/\Oparation f (Identify_Element f X) x=x)).
+assert (forall x:Set, x ∈ X->(contain (Identify_Element f X) X/\Oparation f x (Identify_Element f X)=x/\Oparation f (Identify_Element f X) x=x)).
 apply Monoid_Law_3.
 apply Monoid_Law_1.
 apply H1.
@@ -211,10 +211,10 @@ rewrite <- H14.
 apply H13.
 Qed.
 
-Theorem Group_Law_4:forall f X:Set,Group f X->forall x:Set,x ∈ X->(Oparation f x (Reverse_Element f x X)=(Identify_Element f X)/\Oparation f (Reverse_Element f x X) x=(Identify_Element f X)).
+Theorem Group_Law_4:forall f X:Set,Group f X->forall x:Set,contain x X->(Oparation f x (Reverse_Element f x X)=(Identify_Element f X)/\Oparation f (Reverse_Element f x X) x=(Identify_Element f X)).
 Proof.
 intros.
-apply (Well_Defined_1 (fun x'=>x' ∈ X/\(Oparation f x x')=(Identify_Element f X)/\(Oparation f x' x)=(Identify_Element f X))).
+apply (Well_Defined_1 (fun x'=>contain x' X/\(Oparation f x x')=(Identify_Element f X)/\(Oparation f x' x)=(Identify_Element f X))).
 apply Group_Law_1.
 apply H.
 apply H0.

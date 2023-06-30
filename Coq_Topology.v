@@ -1414,9 +1414,9 @@ Qed.
 
 
 (*相対位相*)
-Definition Sub_Set_Open_Set_Family(O Y X:Set):=Prop_Set (fun o_y=>exists o:Set,o ∈ O/\(o_y=Y ∩ o)).
+Definition Sub_Set_Space(O Y X:Set):=Prop_Set (fun o_y=>exists o:Set,o ∈ O/\(o_y=Y ∩ o)).
 
-Theorem Sub_Set_Open_Set_Family_Law_1:forall O X Y:Set,(Open_Set_Family O X/\Y ⊂ X)->(Open_Set_Family (Sub_Set_Open_Set_Family O Y X) Y).
+Theorem Sub_Set_Space_Law_1:forall O X Y:Set,(Open_Set_Family O X/\Y ⊂ X)->(Open_Set_Family (Sub_Set_Space O Y X) Y).
 Proof.
 intros.
 destruct H.
@@ -1586,7 +1586,6 @@ apply H10.
 split.
 apply H9.
 apply H7.
-
 
 apply Theorem_of_Extensionality.
 intro.

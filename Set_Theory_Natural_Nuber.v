@@ -1,6 +1,6 @@
-Require Export Coq_Basic.
-Require Export Coq_Ordered.
-Require Export Coq_Reration.
+Require Export Set_Theory_Basic.
+Require Export Set_Theory_Ordered.
+Require Export Set_Theory_Reration.
 
 
 
@@ -203,6 +203,17 @@ split.
 destruct H5.
 rewrite -> H8.
 apply H0.
+Qed.
+
+Theorem Peanos_Axiom_5:forall x:Set,~Ordered_Next x=∅.
+Proof.
+intro.
+intro.
+apply (Definition_of_Empty_Set x).
+rewrite <- H.
+apply Ordered_Next_Law_1.
+right.
+split.
 Qed.
 
 Theorem Mathemetical_Induction_1:forall p:Set->Prop,((p (∅))/\(forall n:Set,(n ∈ Natural_Number_Set/\p n)->(p (Ordered_Next n))))->forall n:Set,n ∈ Natural_Number_Set->p n.
@@ -2106,7 +2117,7 @@ rewrite <- (Multi_Law_6 n4 n2).
 rewrite <- (Multi_Law_6 n4 (Culculateion_Map Multi (Ordered_Set n2 n0))).
 rewrite <- (Multi_Law_6 n4 (Culculateion_Map Add (Ordered_Set n2 (Culculateion_Map Multi (Ordered_Set n2 n0))))).
 rewrite <- H5.
-
+split.
 
 destruct Unko.
 destruct Unko.

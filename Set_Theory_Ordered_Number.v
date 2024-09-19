@@ -1,5 +1,7 @@
 Require Export Set_Theory_Basic.
-Require Export Set_Theory_Reration.
+Require Export Set_Theory_Relation.
+Require Export Set_Theory_Map.
+Require Export Set_Theory_Ordered_Relation.
 
 
 
@@ -11,6 +13,8 @@ Definition Ordered_Next(x:Set):=x ∪ (Single_Set x).
 Definition Successor_Ordinal(x:Set):=Ordered_Number x/\exists y:Set,Ordered_Next y=x.
 
 Definition Limit_Ordinal(x:Set):=Ordered_Number x/\~(exists y:Set,Ordered_Next y=x)/\~x=∅.
+
+Definition Contain_Relation(x:Set):=(Prop_Set (fun a=>exists y z:Set,y ∈x/\z ∈ x/\y ∈ z/\a=Ordered_Set y z)).
 
 Theorem Ordered_Number_Law_1:forall x y:Set,(y ∈ x/\Ordered_Number x)->Ordered_Number y.
 Proof.
@@ -469,7 +473,7 @@ apply H4.
 apply H4.
 Qed.
 
-Theorem Ordered_Number_Law_7:forall A:Set,(~A=∅/\forall x:Set,x ∈ A->Ordered_Number x)->exists x0:Set,forall x:Set,x ∈ A->~x ∈ x0.
+Theorem Ordered_Number_Law_7:forall A:Set,(~A=∅/\forall x:Set,x ∈ A->Ordered_Number x)->exists! x0:Set,x0 ∈ A/\forall x:Set,x ∈ A->~x ∈ x0.
 Proof.
 intros.
 destruct H.
@@ -477,6 +481,9 @@ apply Empty_Set_Law_1 in H.
 destruct H.
 destruct (Law_of_Excluded_Middle (A ∩ x=∅)).
 exists x.
+split.
+split.
+apply H.
 intros.
 intro.
 apply (Definition_of_Empty_Set x0).
@@ -486,37 +493,115 @@ split.
 apply H2.
 apply H3.
 
-assert (exists z:Set,(z ∈ (A ∩ x)/\forall w:Set,(w ∈ (A ∩ x)->~w ∈ z))).
-apply H0 in H.
-destruct H.
+intros.
 destruct H2.
-destruct H3.
+assert (Ordered_Number x/\Ordered_Number x').
+split.
+apply H0.
+apply H.
+apply H0.
+apply H2.
+apply Ordered_Number_Law_5 in H4.
 destruct H4.
-apply H5.
+apply H3 in H.
+destruct H.
+apply H4.
+destruct H4.
+apply H4.
+destruct (Definition_of_Empty_Set x').
+rewrite <- H1.
+apply Pair_Meet_Set_Law_1.
+split.
+apply H2.
+apply H4.
+
+assert ((A ∩ x) ⊂ x/\~A ∩ x=∅).
 split.
 intro.
 intro.
-apply Pair_Meet_Set_Law_1 in H6.
-destruct H6.
-apply H7.
-apply H1.
+apply Pair_Meet_Set_Law_1 in H2.
 destruct H2.
+apply H3.
+apply H1.
+assert (x ∈ A).
+apply H.
+apply H0 in H3.
+destruct H3.
+clear H3.
+destruct H4.
+clear H3.
+destruct H4.
+clear H3.
+destruct H4.
+clear H3.
+apply H4 in H2.
+destruct H2.
+destruct H2.
+apply Pair_Meet_Set_Law_1 in H2.
 destruct H2.
 exists x0.
+split.
+split.
+apply H2.
 intros.
 intro.
 apply (H3 x1).
 apply Pair_Meet_Set_Law_1.
 split.
-apply H4.
-apply Pair_Meet_Set_Law_1 in H2.
-destruct H2.
-apply H0 in H.
-destruct H.
-apply H in H6.
 apply H6.
+apply (Ordered_Number_Law_4 x1 x0 x).
+split.
+apply (Ordered_Number_Law_1 x0 x1).
+split.
+apply H7.
+apply H0.
+apply H2.
+split.
+apply H0.
+apply H2.
+split.
+apply H0.
+apply H.
+split.
+apply H7.
 apply H5.
+apply H7.
+
+intros.
+destruct H6.
+assert (Ordered_Number x0/\Ordered_Number x').
+split.
+apply H0.
+apply H2.
+apply H0.
+apply H6.
+apply Ordered_Number_Law_5 in H8.
+destruct H8.
+apply H7 in H2.
+destruct H2.
+apply H8.
+destruct H8.
+apply H8.
+assert (x' ∈ (A ∩ x)).
+apply Pair_Meet_Set_Law_1.
+split.
+apply H6.
+apply (Ordered_Number_Law_4 x' x0 x).
+split.
+apply H0.
+apply H6.
+split.
+apply H0.
+apply H2.
+split.
+apply H0.
+apply H.
+split.
+apply H8.
 apply H5.
+apply H3 in H9.
+destruct H9.
+apply H8.
 Qed.
 
 Theorem Ordered_Number_Law_8:forall x y:Set,y ∈ (Ordered_Next x)<->(y ∈ x\/y=x).
@@ -854,7 +939,7 @@ apply H3 in H9.
 apply H9.
 Qed.
 
-Theorem Ordered_Number_Law_10:forall x a0:Set,a0 ∈ (Prop_Set (fun a=>exists y z:Set,y ∈x/\z ∈ x/\y ∈ z/\a=Ordered_Set y z))<->exists y z:Set,y ∈x/\z ∈ x/\y ∈ z/\a0=Ordered_Set y z.
+Theorem Ordered_Number_Law_10:forall x a0:Set,a0 ∈ Contain_Relation x<->exists y z:Set,y ∈x/\z ∈ x/\y ∈ z/\a0=Ordered_Set y z.
 Proof.
 intros.
 apply Prop_Set_Law_1.
@@ -876,7 +961,7 @@ apply H.
 apply H0.
 Qed.
 
-Theorem Ordered_Number_Law_11:forall x:Set,Ordered_Number x->Narrow_Well_Oredered_Relation (Prop_Set (fun a=>exists y z:Set,y ∈x/\z ∈ x/\y ∈ z/\a=Ordered_Set y z)) x.
+Theorem Ordered_Number_Law_11:forall x:Set,Ordered_Number x->Narrow_Well_Oredered_Relation (Contain_Relation x) x.
 Proof.
 intros.
 destruct H.
@@ -1063,27 +1148,40 @@ apply H1.
 apply H0.
 Qed.
 
-Theorem Ordered_Number_Law_13:forall p:Set->Prop,forall x:Set,(Ordered_Number x/\(p (∅))/\(forall y:Set,y ∈ x->p (Ordered_Next y))/\(forall y:Set,y ∈ x/\Limit_Ordinal y/\(forall z:Set,z ∈ y->p y)))->p x.
-Proof.
-intros.
-apply (Transfinite_Induction_2 p (Prop_Set (fun a=>exists y z:Set,y ∈x/\z ∈ x/\y ∈ z/\a=Ordered_Set y z)) x).
-
-Qed.
-
-Theorem Ordered_Number_Law_14:forall a1 a2:Set,Ordered_Number a1/\Ordered_Number a2/\Narrow_Well_Oredered_Reration_Isomorphic (Prop_Set (fun a=>exists y z:Set,y ∈ a1/\z ∈ a1/\y ∈ z/\a=Ordered_Set y z)) a1 (Prop_Set (fun a=>exists y z:Set,y ∈a2/\z ∈ a2/\y ∈ z/\a=Ordered_Set y z)) a2->a1=a2.
+Theorem Ordered_Number_Law_13:forall x1 x2:Set,Ordered_Number x1/\Ordered_Number x2/\Ordered_Next x1=Ordered_Next x2->x1=x2.
 Proof.
 intros.
 destruct H.
 destruct H0.
-destruct H1.
+assert (x1 ∈ (Ordered_Next x2)).
+rewrite <- H1.
+apply Ordered_Number_Law_8.
+right.
+split.
+assert (x2 ∈ (Ordered_Next x1)).
+rewrite -> H1.
+apply Ordered_Number_Law_8.
+right.
+split.
+apply Ordered_Number_Law_8 in H2.
+apply Ordered_Number_Law_8 in H3.
 destruct H2.
 destruct H3.
-destruct H3.
-apply Theorem_of_Extensionality.
-intro.
+destruct (Ordered_Number_Law_6 x1).
+apply H.
+apply (Ordered_Number_Law_4 x1 x2 x1).
 split.
-
-
+apply H.
+split.
+apply H0.
+split.
+apply H.
+split.
+apply H2.
+apply H3.
+symmetry.
+apply H3.
+apply H2.
 Qed.
 
 

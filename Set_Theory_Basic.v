@@ -768,7 +768,7 @@ Qed.
 
 
 (*積集合*)
-Definition Meet_Set(X:Set):=Prop_Set(fun x=>forall A:Set,A ∈ X->x ∈ A).
+Definition Meet_Set(X:Set):=Prop_Set (fun x=>forall A:Set,A ∈ X->x ∈ A).
 
 Theorem Meet_Set_Law_1:forall X:Set,~X=∅->forall x:Set,x ∈ (Meet_Set X)<->forall A:Set,A ∈ X->x ∈ A.
 Proof.
@@ -781,6 +781,45 @@ exists x.
 intros.
 apply H0.
 apply H.
+Qed.
+
+Theorem Meet_Set_Law_2:forall X A x:Set,(x ∈ (Meet_Set X)/\A ∈ X)->x ∈ A.
+Proof.
+intros.
+destruct H.
+assert (~X=∅).
+apply Empty_Set_Law_1.
+exists A.
+apply H0.
+assert (x ∈ Meet_Set X<->forall A:Set,A ∈ X->x ∈ A).
+apply Prop_Set_Law_1.
+apply Empty_Set_Law_1 in H1.
+destruct H1.
+exists x0.
+intros.
+apply H2.
+apply H1.
+apply H2.
+apply H.
+apply H0.
+Qed.
+
+Theorem Meet_Set_Law_3:forall X x:Set,(~X=∅/\forall A:Set,A ∈ X->x ∈ A)->x ∈ (Meet_Set X).
+Proof.
+intros.
+destruct H.
+assert (x ∈ Meet_Set X<->forall A:Set,A ∈ X->x ∈ A).
+apply Prop_Set_Law_1.
+apply Empty_Set_Law_1 in H.
+destruct H.
+exists x0.
+intros.
+apply H1.
+apply H.
+apply H1.
+intros.
+apply H0.
+apply H2.
 Qed.
 
 
@@ -1032,7 +1071,7 @@ intro.
 apply Pair_Union_Set_Law_1 in H3.
 destruct H3.
 apply H1.
-apply H3.
+apply H3.a
 apply H2.
 apply H3.
 Qed.

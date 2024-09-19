@@ -1,5 +1,6 @@
 Require Export Set_Theory_Basic.
-Require Export Set_Theory_Reration.
+Require Export Set_Theory_Relation.
+Require Export Set_Theory_Map.
 
 
 
@@ -2597,9 +2598,11 @@ destruct H4.
 apply H4.
 Qed.
 
-Theorem Quotient_Group_Law_2:forall f G f0 G0:Set,Normal_Sub_Group f G f0 G0->Binary_Oparation (Quotient_Oparation f G G0) (Quotient_Set (Left_Equivalenc_Relation f G G0) G).
+Theorem Quotient_Group_Law_2:forall f G f0 G0:Set,Normal_Sub_Group f G f0 G0->Group (Quotient_Oparation f G G0) (Quotient_Set (Left_Equivalenc_Relation f G G0) G).
 Proof.
 intros.
+
+assert (Binary_Oparation (Quotient_Oparation f G G0) (Quotient_Set (Left_Equivalenc_Relation f G G0) G)).
 split.
 intros.
 apply Quotient_Group_Law_1 in H0.
@@ -2678,7 +2681,6 @@ split.
 apply H1.
 apply H2.
 split.
-
 intros.
 destruct H5.
 apply Quotient_Group_Law_1 in H5.
@@ -2810,33 +2812,576 @@ apply H.
 apply H11.
 apply H15.
 apply H12.
-Qed.
-
-Theorem Quotient_Group_Law_3:forall f G f0 G0 x0 x1 x2:Set,(Normal_Sub_Group f G f0 G0/\x0=(Oparation f x1 x2))->(Equivalence_Class (Left_Equivalenc_Relation f G G0) G x0)=Oparation (Quotient_Oparation f G G0) (Equivalence_Class (Left_Equivalenc_Relation f G G0) G x1) (Equivalence_Class (Left_Equivalenc_Relation f G G0) G x2).
-Proof.
-intros.
-destruct H.
-apply Theorem_of_Extensionality.
-intro.
 split.
+apply H0.
 
+assert (forall x1 x2:Set,x1 ∈ G/\x2 ∈ G->Equivalence_Class (Left_Equivalenc_Relation f G G0) G (Oparation f x1 x2)=Oparation (Quotient_Oparation f G G0) (Equivalence_Class (Left_Equivalenc_Relation f G G0) G x1) (Equivalence_Class (Left_Equivalenc_Relation f G G0) G x2)).
+intros.
+destruct H1.
+apply (Map_Law_3 (Quotient_Oparation f G G0) (Double_Direct_Product_Set (Quotient_Set (Left_Equivalenc_Relation f G G0) G) (Quotient_Set (Left_Equivalenc_Relation f G G0) G)) (Quotient_Set (Left_Equivalenc_Relation f G G0) G) (Ordered_Set (Equivalence_Class (Left_Equivalenc_Relation f G G0) G x1) (Equivalence_Class (Left_Equivalenc_Relation f G G0) G x2)) (Equivalence_Class (Left_Equivalenc_Relation f G G0) G (Oparation f x1 x2))).
+split.
+apply H0.
+split.
+apply Double_Direct_Product_Set_Law_1.
+exists (Equivalence_Class (Left_Equivalenc_Relation f G G0) G x1).
+exists (Equivalence_Class (Left_Equivalenc_Relation f G G0) G x2).
+split.
+split.
+split.
+apply Quotient_Set_Law_1.
+exists x1.
+split.
+apply H1.
+split.
+apply Quotient_Set_Law_1.
+exists x2.
+split.
+apply H2.
+split.
+split.
+apply Quotient_Set_Law_1.
+exists (Oparation f x1 x2).
+split.
+apply Group_Law_2.
+split.
+destruct H.
+destruct H.
+apply H.
+split.
+apply H1.
+apply H2.
+split.
+apply Quotient_Group_Law_1.
+exists x1.
+exists x2.
+split.
+apply H1.
+split.
+apply H2.
+split.
+assert (Monoid (Quotient_Oparation f G G0) (Quotient_Set (Left_Equivalenc_Relation f G G0) G)).
+split.
+apply H0.
+
+split.
 intro.
+intros.
+destruct H2.
+destruct H3.
+apply Quotient_Set_Law_1 in H2.
+destruct H2.
+destruct H2.
+apply Quotient_Set_Law_1 in H3.
+destruct H3.
+destruct H3.
+apply Quotient_Set_Law_1 in H4.
+destruct H4.
+destruct H4.
+rewrite -> H5.
+rewrite -> H6.
+rewrite -> H7.
+rewrite <- (H1 x0 x4).
+rewrite <- (H1 x x0).
+rewrite <- (H1 x (Oparation f x0 x4)).
+rewrite <- (H1 (Oparation f x x0) x4).
+rewrite -> (Group_Law_3 f G x x0 x4).
+split.
+split.
+destruct H.
+destruct H.
+apply H.
+split.
+apply H2.
+split.
+apply H3.
+apply H4.
+split.
+apply Group_Law_2.
+split.
+destruct H.
+destruct H.
+apply H.
+split.
+apply H2.
+apply H3.
+apply H4.
+split.
+apply H2.
+destruct H.
+destruct H.
+apply Group_Law_2.
+split.
+apply H.
+split.
+apply H3.
+apply H4.
+split.
+apply H2.
+apply H3.
+split.
+apply H3.
+apply H4.
 
+exists (Equivalence_Class (Left_Equivalenc_Relation f G G0) G (Identify_Element f G)).
+split.
+apply Quotient_Set_Law_1.
+exists (Identify_Element f G).
+split.
+apply Group_Law_4.
+destruct H.
+destruct H.
+apply H.
+split.
+intros.
+split.
+apply Quotient_Set_Law_1 in H2.
+destruct H2.
+destruct H2.
+rewrite -> H3.
+rewrite <- (H1 x0 (Identify_Element f G)).
+rewrite -> (Group_Law_5 f G).
+split.
+split.
+destruct H.
+destruct H.
+apply H.
+apply H2.
+split.
+apply H2.
+apply Group_Law_4.
+destruct H.
+destruct H.
+apply H.
+apply Quotient_Set_Law_1 in H2.
+destruct H2.
+destruct H2.
+rewrite -> H3.
+rewrite <- (H1 (Identify_Element f G) x0).
+rewrite -> (Group_Law_6 f G).
+split.
+split.
+destruct H.
+destruct H.
+apply H.
+apply H2.
+split.
+apply Group_Law_4.
+destruct H.
+destruct H.
+apply H.
+apply H2.
+split.
+destruct H2.
+destruct H3.
+apply H3.
+split.
+destruct H2.
+destruct H3.
+apply H4.
+
+intros.
+apply Quotient_Set_Law_1 in H3.
+destruct H3.
+destruct H3.
+exists (Equivalence_Class (Left_Equivalenc_Relation f G G0) G (Reverse_Element f G x0)).
+split.
+apply Quotient_Set_Law_1.
+exists (Reverse_Element f G x0).
+split.
+apply Group_Law_9.
+split.
+destruct H.
+destruct H.
+apply H.
+apply H3.
+split.
+assert (Equivalence_Class (Left_Equivalenc_Relation f G G0) G (Identify_Element f G)=Identify_Element (Quotient_Oparation f G G0) (Quotient_Set (Left_Equivalenc_Relation f G G0) G)).
+assert (Monoid (Quotient_Oparation f G G0) (Quotient_Set (Left_Equivalenc_Relation f G G0) G)).
+apply H2.
+apply Monoid_Law_3 in H5.
+destruct H5.
+destruct H5.
+rewrite <- (H6 (Equivalence_Class (Left_Equivalenc_Relation f G G0) G (Identify_Element f G))).
+rewrite <- (H6 (Identify_Element (Quotient_Oparation f G G0) (Quotient_Set (Left_Equivalenc_Relation f G G0) G))).
+split.
+split.
+apply Monoid_Law_5.
+apply H2.
+intros.
+split.
+apply Monoid_Law_6.
+split.
+apply H2.
+apply H7.
+apply Monoid_Law_7.
+split.
+apply H2.
+apply H7.
+split.
+apply Quotient_Set_Law_1.
+exists (Identify_Element f G).
+split.
+apply Group_Law_4.
+destruct H.
+destruct H.
+apply H.
+split.
+intros.
+split.
+apply Quotient_Set_Law_1 in H7.
+destruct H7.
+destruct H7.
+rewrite -> H8.
+rewrite <- H1.
+rewrite -> Group_Law_5.
+split.
+split.
+destruct H.
+destruct H.
+apply H.
+apply H7.
+split.
+apply H7.
+apply Group_Law_4.
+destruct H.
+destruct H.
+apply H.
+apply Quotient_Set_Law_1 in H7.
+destruct H7.
+destruct H7.
+rewrite -> H8.
+rewrite <- H1.
+rewrite -> Group_Law_6.
+split.
+split.
+destruct H.
+destruct H.
+apply H.
+apply H7.
+split.
+apply Group_Law_4.
+destruct H.
+destruct H.
+apply H.
+apply H7.
+rewrite -> H4.
+split.
+rewrite <- (H1 x0 (Reverse_Element f G x0)).
+rewrite -> (Group_Law_10 f G x0).
+apply H5.
+split.
+destruct H.
+destruct H.
+apply H.
+apply H3.
+split.
+apply H3.
+apply Group_Law_9.
+split.
+destruct H.
+destruct H.
+apply H.
+apply H3.
+rewrite <- H1.
+rewrite -> (Group_Law_11 f G x0).
+apply H5.
+split.
+destruct H.
+destruct H.
+apply H.
+apply H3.
+split.
+apply Group_Law_9.
+split.
+destruct H.
+destruct H.
+apply H.
+apply H3.
+apply H3.
 Qed.
-
-
-
 
 
 
 (*群準同型*)
 Definition Group_homomorphism(h f1 G1 f2 G2:Set):=Group f1 G1/\Group f2 G2/\Map h G1 G2/\(forall x y:Set,(x ∈ G1/\y ∈ G1)->Oparation f2 (Culculateion_Map h x) (Culculateion_Map h y)=Culculateion_Map h (Oparation f1 x y)).
 
+Theorem Group_homomorphism_Law_1:forall f G:Set,Group f G->Group_homomorphism (Identify_Map G) f G f G.
+Proof.
+intros.
+split.
+apply H.
+split.
+apply H.
+split.
+apply Identify_Map_Law_4.
+
+intros.
+destruct H0.
+rewrite <- (Identify_Map_Law_3 G x).
+rewrite <- (Identify_Map_Law_3 G y).
+rewrite <- (Identify_Map_Law_3 G (Oparation f x y)).
+split.
+apply Group_Law_2.
+split.
+apply H.
+split.
+apply H0.
+apply H1.
+apply H1.
+apply H0.
+Qed.
+
+Theorem Group_homomorphism_Law_2:forall h1 h2 f1 G1 f2 G2 f3 G3:Set,Group_homomorphism h1 f1 G1 f2 G2/\Group_homomorphism h2 f2 G2 f3 G3->Group_homomorphism (Composite_Map h1 h2) f1 G1 f3 G3.
+Proof.
+intros.
+destruct H.
+split.
+destruct H.
+apply H.
+split.
+destruct H0.
+destruct H1.
+apply H1.
+split.
+assert (Map (Composite_Map h1 h2) G1 G3).
+apply (Composite_Map_Law_1 h1 h2 G1 G2 G3).
+split.
+destruct H.
+destruct H1.
+destruct H2.
+apply H2.
+destruct H0.
+destruct H1.
+destruct H2.
+apply H2.
+apply H1.
+intros.
+rewrite <- (Composite_Map_Law_2 h1 h2 x G1 G2 G3).
+rewrite <- (Composite_Map_Law_2 h1 h2 y G1 G2 G3).
+rewrite <- (Composite_Map_Law_2 h1 h2 (Oparation f1 x y) G1 G2 G3).
+destruct H1.
+destruct H.
+destruct H3.
+destruct H4.
+destruct H0.
+destruct H6.
+destruct H7.
+rewrite -> (H8 (Culculateion_Map h1 x) (Culculateion_Map h1 y)).
+rewrite -> (H5 x y).
+split.
+split.
+apply H1.
+apply H2.
+split.
+apply (Map_Law_2 h1 G1 G2 x).
+split.
+apply H4.
+apply H1.
+apply (Map_Law_2 h1 G1 G2 y).
+split.
+apply H4.
+apply H2.
+split.
+destruct H.
+destruct H2.
+destruct H3.
+apply H3.
+split.
+destruct H0.
+destruct H2.
+destruct H3.
+apply H3.
+apply Group_Law_2.
+split.
+destruct H.
+apply H.
+apply H1.
+split.
+destruct H.
+destruct H2.
+destruct H3.
+apply H3.
+split.
+destruct H0.
+destruct H2.
+destruct H3.
+apply H3.
+destruct H1.
+apply H2.
+split.
+destruct H.
+destruct H2.
+destruct H3.
+apply H3.
+split.
+destruct H0.
+destruct H2.
+destruct H3.
+apply H3.
+destruct H1.
+apply H1.
+Qed.
+
+
+
 (*群同型*)
 Definition Group_Isomorphism(h f1 G1 f2 G2:Set):=Group f1 G1/\Group f2 G2/\Bijective_Map h G1 G2/\(forall x y:Set,(x ∈ G1/\y ∈ G1)->Oparation f2 (Culculateion_Map h x) (Culculateion_Map h y)=Culculateion_Map h (Oparation f1 x y)).
 
+Theorem Group_Isomorphism_Law_1:forall f G:Set,Group f G->Group_Isomorphism (Identify_Map G) f G f G.
+Proof.
+intros.
+split.
+apply H.
+split.
+apply H.
+split.
+apply Identify_Map_Law_2.
+
+intros.
+destruct H0.
+rewrite <- (Identify_Map_Law_3 G x).
+rewrite <- (Identify_Map_Law_3 G y).
+rewrite <- (Identify_Map_Law_3 G (Oparation f x y)).
+split.
+apply Group_Law_2.
+split.
+apply H.
+split.
+apply H0.
+apply H1.
+apply H1.
+apply H0.
+Qed.
+
+Theorem Group_Isomorphism_Law_2:forall h1 h2 f1 G1 f2 G2 f3 G3:Set,Group_Isomorphism h1 f1 G1 f2 G2/\Group_Isomorphism h2 f2 G2 f3 G3->Group_Isomorphism (Composite_Map h1 h2) f1 G1 f3 G3.
+Proof.
+intros.
+destruct H.
+split.
+destruct H.
+apply H.
+split.
+destruct H0.
+destruct H1.
+apply H1.
+split.
+apply (Composite_Map_Law_5 h1 h2 G1 G2 G3).
+split.
+destruct H.
+destruct H1.
+destruct H2.
+apply H2.
+destruct H0.
+destruct H1.
+destruct H2.
+apply H2.
+intros.
+destruct H1.
+rewrite <- (Composite_Map_Law_2 h1 h2 x G1 G2 G3).
+rewrite <- (Composite_Map_Law_2 h1 h2 y G1 G2 G3).
+rewrite <- (Composite_Map_Law_2 h1 h2 (Oparation f1 x y) G1 G2 G3).
+destruct H.
+destruct H3.
+destruct H4.
+destruct H0.
+destruct H6.
+destruct H7.
+rewrite -> (H8 (Culculateion_Map h1 x) (Culculateion_Map h1 y)).
+rewrite -> (H5 x y).
+split.
+split.
+apply H1.
+apply H2.
+split.
+apply (Map_Law_2 h1 G1 G2 x).
+split.
+apply H4.
+apply H1.
+apply (Map_Law_2 h1 G1 G2 y).
+split.
+apply H4.
+apply H2.
+split.
+destruct H.
+destruct H3.
+destruct H4.
+destruct H4.
+destruct H4.
+apply H4.
+split.
+destruct H0.
+destruct H3.
+destruct H4.
+destruct H4.
+destruct H6.
+apply H6.
+destruct H.
+apply Group_Law_2.
+split.
+apply H.
+split.
+apply H1.
+apply H2.
+split.
+destruct H.
+destruct H3.
+destruct H4.
+destruct H4.
+destruct H4.
+apply H4.
+split.
+destruct H0.
+destruct H3.
+destruct H4.
+destruct H4.
+destruct H6.
+apply H6.
+apply H2.
+split.
+destruct H.
+destruct H3.
+destruct H4.
+destruct H4.
+destruct H4.
+apply H4.
+split.
+destruct H0.
+destruct H3.
+destruct H4.
+destruct H4.
+destruct H6.
+apply H6.
+apply H1.
+Qed.
+
+Theorem Group_Isomorphism_Law_3:forall h f1 G1 f2 G2:Set,Group_Isomorphism h f1 G1 f2 G2->Group_Isomorphism (Inverse_Map h G1 G2) f2 G2 f1 G1.
+Proof.
+intros.
+destruct H.
+destruct H0.
+destruct H1.
+
+split.
+apply H0.
+
+split.
+apply H.
+
+split.
+apply Inverse_Map_Law_6.
+apply H1.
+
+intros.
+destruct H3.
+assert ().
+Qed.
+
+
 (*核*)
 Definition Kernel_Map(h X g Y:Set):=Prop_Set (fun x=>x ∈ X/\(Identify_Element g Y)=Culculateion_Map h x).
+
+  
+
 
 
 

@@ -1071,7 +1071,36 @@ apply H.
 apply H1.
 Qed.
 
-Theorem Interior_Set_Law_6:forall A O X:Set,(Open_Set_Family O X/\A ⊂ X)->(Interior_Set (Interior_Set A O X) O X)=(Interior_Set A O X).
+Theorem Interior_Set_Law_6:forall O X:Set,Open_Set_Family O X->(Interior_Set X O X)=X.
+Proof.
+intros.
+apply Theorem_of_Extensionality.
+intros.
+split.
+
+intro.
+apply (Interior_Set_Law_3 X O X).
+split.
+apply H.
+intro.
+intro.
+apply H1.
+apply H0.
+
+intro.
+apply Interior_Set_Law_1.
+exists X.
+split.
+apply Open_Set_Family_Law_3.
+apply H.
+split.
+intro.
+intro.
+apply H1.
+apply H0.
+Qed.
+
+Theorem Interior_Set_Law_7:forall A O X:Set,(Open_Set_Family O X/\A ⊂ X)->(Interior_Set (Interior_Set A O X) O X)=(Interior_Set A O X).
 Proof.
 intros.
 destruct H.
@@ -1083,6 +1112,84 @@ apply Interior_Set_Law_2.
 split.
 apply H.
 apply H0.
+Qed.
+
+Theorem Interior_Set_Law_8:forall A B O X:Set,(Open_Set_Family O X/\A ⊂ X/\B ⊂ X)->Interior_Set (A ∩ B) O X=(Interior_Set A O X) ∩ (Interior_Set B O X).
+Proof.
+intros.
+destruct H.
+destruct H0.
+apply Theorem_of_Extensionality.
+intro.
+split.
+
+intro.
+apply Pair_Meet_Set_Law_1.
+apply Interior_Set_Law_1 in H2.
+destruct H2.
+destruct H2.
+destruct H3.
+split.
+apply Interior_Set_Law_1.
+exists x.
+split.
+apply H2.
+split.
+intro.
+intro.
+apply H3 in H5.
+apply Pair_Meet_Set_Law_1 in H5.
+destruct H5.
+apply H5.
+apply H4.
+apply Interior_Set_Law_1.
+exists x.
+split.
+apply H2.
+split.
+intro.
+intro.
+apply H3 in H5.
+apply Pair_Meet_Set_Law_1 in H5.
+destruct H5.
+apply H6.
+apply H4.
+
+intro.
+apply Interior_Set_Law_1.
+apply Pair_Meet_Set_Law_1 in H2.
+destruct H2.
+apply Interior_Set_Law_1 in H2.
+destruct H2.
+destruct H2.
+destruct H4.
+apply Interior_Set_Law_1 in H3.
+destruct H3.
+destruct H3.
+destruct H6.
+exists (x ∩ x0).
+split.
+apply (Open_Set_Family_Law_4 O X x x0).
+split.
+apply H.
+split.
+apply H2.
+apply H3.
+split.
+intro.
+intro.
+apply Pair_Meet_Set_Law_1 in H8.
+apply Pair_Meet_Set_Law_1.
+destruct H8.
+split.
+apply H4.
+apply H8.
+apply H6.
+apply H9.
+apply Pair_Meet_Set_Law_1.
+split.
+apply H5.
+apply H7.
 Qed.
 
 
@@ -1461,7 +1568,43 @@ symmetry.
 apply H3.
 Qed.
 
-Theorem Closure_Set_Law_7:forall A O X:Set,(Open_Set_Family O X/\A ⊂ X)->(Closure_Set (Closure_Set A O X) O X)=(Closure_Set A O X).
+Theorem Closure_Set_Law_7:forall O X:Set,(Open_Set_Family O X)->Closure_Set (∅) O X=(∅).
+Proof.
+intros.
+apply Theorem_of_Extensionality.
+intro.
+split.
+
+intro.
+apply (Closure_Set_Law_1 (∅) O X z (∅)).
+split.
+apply H.
+split.
+intro.
+intro.
+destruct (Definition_of_Empty_Set z0).
+apply H1.
+split.
+apply H0.
+split.
+intro.
+intro.
+apply H1.
+split.
+intro.
+intro.
+destruct (Definition_of_Empty_Set z0).
+apply H1.
+rewrite <- Complement_Set_Law_3.
+apply Open_Set_Family_Law_3.
+apply H.
+
+intro.
+destruct (Definition_of_Empty_Set z).
+apply H0.
+Qed.
+
+Theorem Closure_Set_Law_8:forall A O X:Set,(Open_Set_Family O X/\A ⊂ X)->(Closure_Set (Closure_Set A O X) O X)=(Closure_Set A O X).
 Proof.
 intros.
 destruct H.
@@ -1494,87 +1637,155 @@ apply H.
 apply H0.
 Qed.
 
-Theorem Closure_Set_Law_8:forall A O X:Set,(Open_Set_Family O X/\A ⊂ X)->(Closure_Set (Interior_Set A O X) O X)=(Closure_Set A O X).
+Theorem Closure_Set_Law_9:forall A B O X:Set,(Open_Set_Family O X/\A ⊂ X/\B ⊂ X)->Closure_Set (A ∪ B) O X=(Closure_Set A O X) ∪ (Closure_Set B O X).
 Proof.
 intros.
 apply Theorem_of_Extensionality.
 intros.
 destruct H.
+destruct H0.
 split.
 
 intro.
-apply Closure_Set_Law_2.
+apply (Closure_Set_Law_1 (A ∪ B) O X z (Closure_Set A O X ∪ Closure_Set B O X)).
 split.
 apply H.
 split.
-apply H0.
-intros.
-destruct H2.
+intro.
+intro.
+apply Pair_Union_Set_Law_1 in H3.
 destruct H3.
-apply (Closure_Set_Law_1 (Interior_Set A O X) O X z A0).
+apply H0.
+apply H3.
+apply H1.
+apply H3.
+split.
+apply H2.
+split.
+intro.
+intro.
+apply Pair_Union_Set_Law_1 in H3.
+apply Pair_Union_Set_Law_1.
+destruct H3.
+left.
+apply (Closure_Set_Law_4 A O X).
+split.
+apply H.
+apply H0.
+apply H3.
+right.
+apply (Closure_Set_Law_4 B O X).
+split.
+apply H.
+apply H1.
+apply H3.
+split.
+intro.
+intro.
+apply Pair_Union_Set_Law_1 in H3.
+destruct H3.
+apply (Closure_Set_Law_1 A O X z0 X).
 split.
 apply H.
 split.
-intro.
-intro.
-apply Interior_Set_Law_1 in H5.
-destruct H5.
-destruct H5.
-destruct H6.
 apply H0.
-apply H6.
-apply H7.
+split.
+apply H3.
+split.
+apply H0.
+split.
+intro.
+intro.
+apply H4.
+rewrite -> Complement_Set_Law_2.
+apply (Open_Set_Family_Law_2 O X).
+apply H.
+apply (Closure_Set_Law_1 B O X z0 X).
+split.
+apply H.
+split.
+apply H1.
+split.
+apply H3.
 split.
 apply H1.
 split.
 intro.
 intro.
-apply H2.
-apply (Interior_Set_Law_3 A O X).
-split.
-apply H.
-intro.
-intro.
-apply H3.
-apply H2.
-apply H6.
-apply H5.
-split.
-apply H3.
 apply H4.
+rewrite -> Complement_Set_Law_2.
+apply (Open_Set_Family_Law_2 O X).
+apply H.
+rewrite -> (De_Morgans_Law_2 (Closure_Set A O X) (Closure_Set B O X) X).
+apply (Open_Set_Family_Law_4 O X (Complement_Set X (Closure_Set A O X)) (Complement_Set X (Closure_Set B O X))).
+split.
+apply H.
+split.
+apply (Closure_Set_Law_3 A O X).
+split.
+apply H.
+apply H0.
+apply (Closure_Set_Law_3 B O X).
+split.
+apply H.
+apply H1.
 
-intros.
-apply (Closure_Set_Law_2 (Interior_Set A O X) O X z).
+intro.
+apply Pair_Union_Set_Law_1 in H2.
+apply (Closure_Set_Law_2 (A ∪ B) O X z).
 split.
 apply H.
 split.
 intro.
 intro.
-apply H0.
-apply (Interior_Set_Law_3 A O X).
-split.
-apply H.
-apply H0.
-apply H2.
-intros.
-destruct H2.
+apply Pair_Union_Set_Law_1 in H3.
 destruct H3.
+apply H0.
+apply H3.
+apply H1.
+apply H3.
+intros.
+destruct H3.
+destruct H4.
+destruct H2.
 apply (Closure_Set_Law_1 A O X z A0).
 split.
 apply H.
 split.
 apply H0.
 split.
-apply H1.
+apply H2.
 split.
 intro.
 intro.
-destruct (Law_of_Excluded_Middle (z0 ∈ (Interior_Set A O X))).
-apply H2.
+apply H3.
+apply Pair_Union_Set_Law_1.
+left.
 apply H6.
-
+split.
+intro.
+intro.
+apply H4.
+apply H6.
+apply H5.
+apply (Closure_Set_Law_1 B O X z A0).
+split.
+apply H.
+split.
+apply H1.
+split.
+apply H2.
+split.
+intro.
+intro.
+apply H3.
+apply Pair_Union_Set_Law_1.
+right.
+apply H6.
+split.
+apply H4.
+apply H5.
 Qed.
-
 
 
 
@@ -1674,12 +1885,6 @@ split.
 apply H.
 apply H0.
 apply H2.
-Qed.
-
-Theorem Border_Set_Law_3:forall A O X:Set,(Open_Set_Family O X/\A ⊂ X)->Border_Set A O X=Border_Set (Closure_Set A O X) O X.
-Proof.
-intros.
-destruct H.
 Qed.
 
 

@@ -151,6 +151,67 @@ apply H2.
 apply H0.
 Qed.
 
+Theorem Equivalence_Class_Law_4:forall f x y X:Set,(Equivalenc_Relation f X/\x ∈ X/\y ∈ X/\Equivalence_Class f X x=Equivalence_Class f X y)->Relation_Prop f x y.
+Proof.
+intros.
+destruct H.
+destruct H0.
+destruct H1.
+apply (Equivalence_Class_Law_2 f x y X).
+split.
+apply H.
+rewrite <- H2.
+apply Equivalence_Class_Law_3.
+split.
+apply H.
+apply (Equivalenc_Relation_Law_2 f X x).
+split.
+apply H.
+apply H0.
+Qed.
+
+Theorem Equivalence_Class_Law_5:forall f x y X:Set,(Equivalenc_Relation f X/\x ∈ X/\y ∈ X/\Relation_Prop f x y)->Equivalence_Class f X x=Equivalence_Class f X y.
+Proof.
+intros.
+destruct H.
+destruct H0.
+destruct H1.
+apply Theorem_of_Extensionality.
+intro.
+split.
+
+intro.
+apply Equivalence_Class_Law_3.
+split.
+apply H.
+apply (Equivalenc_Relation_Law_4 f X z x y).
+split.
+apply H.
+split.
+apply (Equivalence_Class_Law_2 f z x X).
+split.
+apply H.
+apply H3.
+apply H2.
+
+intro.
+apply Equivalence_Class_Law_3.
+split.
+apply H.
+apply (Equivalenc_Relation_Law_4 f X z y x).
+split.
+apply H.
+split.
+apply (Equivalence_Class_Law_2 f z y X).
+split.
+apply H.
+apply H3.
+apply (Equivalenc_Relation_Law_3 f X x).
+split.
+apply H.
+apply H2.
+Qed.
+
 Theorem Quotient_Set_Law_1:forall f X A:Set,A ∈ (Prop_Set (fun x'=>exists x:Set,x ∈ X/\x'=Equivalence_Class f X x))<->exists x:Set,x ∈ X/\A=Equivalence_Class f X x.
 Proof.
 intros.

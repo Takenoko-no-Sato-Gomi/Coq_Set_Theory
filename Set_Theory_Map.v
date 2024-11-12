@@ -54,7 +54,7 @@ rewrite -> H5.
 apply H3.
 Qed.
 
-Theorem Map_Law_3:forall f X Y x y:Set,(Map f X Y/\x ∈ X/\y ∈ Y/\(Ordered_Set x y) ∈ f)->(y=Culculateion_Map f x).
+Theorem Map_Law_3:forall f X Y x y:Set,(Map f X Y/\x ∈ X/\y ∈ Y/\(Ordered_Set x y) ∈ f)->y=Culculateion_Map f x.
 Proof.
 intros.
 destruct H.
@@ -195,6 +195,66 @@ intros.
 apply H2 in H3.
 rewrite -> H3.
 split.
+Qed.
+
+Theorem Map_Law_5:forall f X Y Y0:Set,Map f X Y/\Y0 ⊂ Y/\(forall x:Set,x ∈ X->(Culculateion_Map f x) ∈ Y0)->Map f X Y0.
+Proof.
+intros.
+destruct H.
+destruct H0.
+split.
+
+intros.
+assert (Map f X Y).
+apply H.
+destruct H3.
+assert (a ∈ f).
+apply H2.
+apply H3 in H2.
+destruct H2.
+destruct H2.
+destruct H2.
+destruct H6.
+exists x.
+exists x0.
+split.
+apply H2.
+split.
+rewrite -> (Map_Law_3 f X Y x x0).
+apply H1.
+apply H2.
+split.
+apply H.
+split.
+apply H2.
+split.
+apply H6.
+rewrite <- H7.
+apply H5.
+apply H7.
+
+intros.
+exists (Culculateion_Map f x).
+split.
+split.
+apply (Map_Law_1 f X Y x).
+split.
+apply H.
+apply H2.
+apply H1.
+apply H2.
+intros.
+destruct H3.
+symmetry.
+apply (Map_Law_3 f X Y x x').
+split.
+apply H.
+split.
+apply H2.
+split.
+apply H0.
+apply H4.
+apply H3.
 Qed.
 
 
@@ -1285,19 +1345,124 @@ Qed.
 
 
 
-(*像*)
-Definition Image_Map(f X Y:Set):=Prop_Set (fun y=>exists x:Set,x ∈ X/\y ∈ Y/\y=Culculateion_Map f x).
+Definition Sub_Set_Map_Image(f X Y A:Set):=Prop_Set (fun y=>y ∈ Y/\exists x:Set,x ∈ A/\y=Culculateion_Map f x).
 
-Theorem Image_Map_Law_1:forall f X Y y:Set,y ∈ (Image_Map f X Y)<->exists x:Set,x ∈ X/\y ∈ Y/\y=Culculateion_Map f x.
+Theorem Sub_Set_Map_Image_Law_1:forall f X Y A a:Set,a ∈ (Sub_Set_Map_Image f X Y A)<->a ∈ Y/\exists x:Set,x ∈ A/\a=Culculateion_Map f x.
 Proof.
 intros.
 apply Prop_Set_Law_1.
 exists Y.
 intros.
 destruct H.
+apply H.
+Qed.
+
+
+
+Definition Map_Image(f X Y:Set):=Prop_Set (fun y=>y ∈ Y/\exists x:Set,x ∈ X/\y=Culculateion_Map f x).
+
+Theorem Map_Image_Law_1:forall f X Y y:Set,y ∈ (Map_Image f X Y)<->y ∈ Y/\exists x:Set,x ∈ X/\y=Culculateion_Map f x.
+Proof.
+intros.
+apply (Prop_Set_Law_1 (fun y=>y ∈ Y/\exists x:Set,x ∈ X/\y=Culculateion_Map f x)).
+exists Y.
+intros.
 destruct H.
-destruct H0.
+apply H.
+Qed.
+
+Theorem Map_Image_Law_2:forall f X Y:Set,Surjective_Map f X Y->Map_Image f X Y=Y.
+Proof.
+intros.
+destruct H.
+apply Theorem_of_Extensionality.
+intro.
+split.
+intro.
+
+apply Map_Image_Law_1 in H1.
+destruct H1.
+apply H1.
+
+intro.
+apply Map_Image_Law_1.
+split.
+apply H1.
 apply H0.
+apply H1.
+Qed.
+
+Theorem Map_Image_Law_3:forall f X Y:Set,Map f X Y/\Map_Image f X Y=Y->Surjective_Map f X Y.
+Proof.
+intros.
+destruct H.
+split.
+apply H.
+intros.
+rewrite <- H0 in H1.
+apply (Map_Image_Law_1 f X Y y).
+apply H1.
+Qed.
+
+
+
+Definition Unit_Map_Pull_Backe(f X Y y:Set):=Prop_Set (fun x=>x ∈ X/\y=Culculateion_Map f x).
+
+Theorem Unit_Map_Pull_Backe_Law_1:forall f X Y y x:Set,x ∈ (Unit_Map_Pull_Backe f X Y y)<->x ∈ X/\y=Culculateion_Map f x.
+Proof.
+intros.
+apply Prop_Set_Law_1.
+exists X.
+intros.
+destruct H.
+apply H.
+Qed.
+
+
+
+Definition Sub_Set_Map_Pull_Backe(f X Y A:Set):=Prop_Set (fun x=>x ∈ X/\exists y:Set,y∈ A/\y=Culculateion_Map f x).
+
+Theorem Sub_Set_Map_Pull_Backe_Law_1:forall f X Y A x:Set,x ∈ (Sub_Set_Map_Pull_Backe f X Y A)<->x ∈ X/\exists y:Set,y∈ A/\y=Culculateion_Map f x.
+Proof.
+intros.
+apply Prop_Set_Law_1.
+exists X.
+intros.
+destruct H.
+apply H.
+Qed.
+
+Theorem Sub_Set_Map_Pull_Backe_Law_2:forall f X Y y:Set,Map f X Y/\y ∈ Y->Unit_Map_Pull_Backe f X Y y=Sub_Set_Map_Pull_Backe f X Y (Single_Set y).
+Proof.
+intros.
+destruct H.
+apply Theorem_of_Extensionality.
+intros.
+split.
+intro.
+
+apply Unit_Map_Pull_Backe_Law_1 in H1.
+destruct H1.
+apply Sub_Set_Map_Pull_Backe_Law_1.
+split.
+apply H1.
+exists y.
+split.
+apply Single_Set_Law_1.
+split.
+apply H2.
+
+intro.
+apply Sub_Set_Map_Pull_Backe_Law_1 in H1.
+destruct H1.
+destruct H2.
+destruct H2.
+apply Unit_Map_Pull_Backe_Law_1.
+split.
+apply H1.
+apply Single_Set_Law_1 in H2.
+rewrite <- H2.
+apply H3.
 Qed.
 
 

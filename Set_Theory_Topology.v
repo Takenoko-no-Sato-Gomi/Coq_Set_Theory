@@ -1,4 +1,5 @@
 Require Export Set_Theory_Basic.
+Require Export Set_Theory_Map.
 
 
 
@@ -2402,3 +2403,400 @@ split.
 apply H9.
 apply H11.
 Qed.
+
+
+
+(*連続写像*)
+Definition Continuous_Map(f O1 X1 O2 X2:Set):=Map f X1 X2/\Open_Set_Family O1 X1/\Open_Set_Family O2 X2/\(forall U:Set,U ∈ O2->(Sub_Set_Map_Pull_Backe f X1 X2 U) ∈ O1).
+
+Theorem Continuous_Map_Law_1:forall X O:Set,Open_Set_Family O X->Continuous_Map (Identify_Map X) O X O X.
+Proof.
+intros.
+split.
+apply Identify_Map_Law_4.
+split.
+apply H.
+split.
+apply H.
+intros.
+
+assert (Sub_Set_Map_Pull_Backe (Identify_Map X) X X U=U).
+apply Axiom_of_Extensionality.
+intro.
+split.
+intro.
+apply Sub_Set_Map_Pull_Backe_Law_1 in H1.
+destruct H1.
+destruct H2.
+destruct H2.
+rewrite -> H3 in H2.
+rewrite <- (Identify_Map_Law_3 X z) in H2.
+apply H2.
+apply H1.
+intro.
+apply Sub_Set_Map_Pull_Backe_Law_1.
+split.
+apply (Open_Set_Family_Law_1 U O X).
+split.
+apply H.
+apply H0.
+apply H1.
+exists (Culculateion_Map (Identify_Map X) z).
+split.
+rewrite <- (Identify_Map_Law_3 X z).
+apply H1.
+apply (Open_Set_Family_Law_1 U O X).
+split.
+apply H.
+apply H0.
+apply H1.
+split.
+
+rewrite -> H1.
+apply H0.
+Qed.
+
+Theorem Continuous_Map_Law_2:forall f1 f2 O1 X1 O2 X2 O3 X3:Set,Continuous_Map f1 O1 X1 O2 X2/\Continuous_Map f2 O2 X2 O3 X3->Continuous_Map (Composite_Map f1 f2) O1 X1 O3 X3.
+Proof.
+intros.
+destruct H.
+destruct H.
+destruct H1.
+destruct H2.
+destruct H0.
+destruct H4.
+destruct H5.
+split.
+apply (Composite_Map_Law_1 f1 f2 X1 X2 X3).
+split.
+apply H.
+apply H0.
+split.
+apply H1.
+split.
+apply H5.
+intros.
+
+assert (Sub_Set_Map_Pull_Backe (Composite_Map f1 f2) X1 X3 U=Sub_Set_Map_Pull_Backe f1 X1 X2 (Sub_Set_Map_Pull_Backe f2 X2 X3 U)).
+apply Axiom_of_Extensionality.
+intro.
+split.
+intro.
+apply Sub_Set_Map_Pull_Backe_Law_1 in H8.
+destruct H8.
+destruct H9.
+destruct H9.
+rewrite <- (Composite_Map_Law_2 f1 f2 z X1 X2 X3) in H10.
+apply Sub_Set_Map_Pull_Backe_Law_1.
+split.
+apply H8.
+exists (Culculateion_Map f1 z).
+split.
+apply Sub_Set_Map_Pull_Backe_Law_1.
+split.
+apply (Map_Law_2 f1 X1 X2 z).
+split.
+apply H.
+apply H8.
+exists (Culculateion_Map f2 (Culculateion_Map f1 z)).
+split.
+rewrite <- H10.
+apply H9.
+split.
+split.
+split.
+apply H.
+split.
+apply H0.
+apply H8.
+intro.
+apply Sub_Set_Map_Pull_Backe_Law_1 in H8.
+destruct H8.
+destruct H9.
+destruct H9.
+apply Sub_Set_Map_Pull_Backe_Law_1 in H9.
+destruct H9.
+destruct H11.
+destruct H11.
+apply Sub_Set_Map_Pull_Backe_Law_1.
+split.
+apply H8.
+exists x0.
+split.
+apply H11.
+rewrite <- (Composite_Map_Law_2 f1 f2 z X1 X2 X3).
+rewrite <- H10.
+apply H12.
+split.
+apply H.
+split.
+apply H0.
+apply H8.
+rewrite -> H8.
+apply H3.
+apply H6.
+apply H7.
+Qed.
+
+Theorem Continuous_Map_Law_3:forall f O1 X1 O2 X2 U:Set,Continuous_Map f O1 X1 O2 X2/\(Complement_Set X2 U) ∈ O2->(Complement_Set X1 (Sub_Set_Map_Pull_Backe f X1 X2 U)) ∈ O1.
+Proof.
+intros.
+destruct H.
+destruct H.
+destruct H1.
+destruct H2.
+
+assert (Complement_Set X1 (Sub_Set_Map_Pull_Backe f X1 X2 U)=Sub_Set_Map_Pull_Backe f X1 X2 (Complement_Set X2 U)).
+apply Axiom_of_Extensionality.
+intro.
+split.
+intro.
+apply Complement_Set_Law_1 in H4.
+destruct H4.
+apply Sub_Set_Map_Pull_Backe_Law_1.
+split.
+apply H4.
+exists (Culculateion_Map f z).
+split.
+apply Complement_Set_Law_1.
+split.
+apply (Map_Law_2 f X1 X2 z).
+split.
+apply H.
+apply H4.
+intro.
+apply H5.
+apply Sub_Set_Map_Pull_Backe_Law_1.
+split.
+apply H4.
+exists (Culculateion_Map f z).
+split.
+apply H6.
+split.
+split.
+intro.
+apply Sub_Set_Map_Pull_Backe_Law_1 in H4.
+destruct H4.
+destruct H5.
+destruct H5.
+apply Complement_Set_Law_1 in H5.
+destruct H5.
+apply Complement_Set_Law_1.
+split.
+apply H4.
+intro.
+apply H7.
+apply Sub_Set_Map_Pull_Backe_Law_1 in H8.
+destruct H8.
+destruct H9.
+destruct H9.
+rewrite -> H6.
+rewrite <- H10.
+apply H9.
+
+rewrite -> H4.
+apply H3.
+apply H0.
+Qed.
+
+Theorem Continuous_Map_Law_4:forall f O1 X1 O2 X2:Set,Map f X1 X2/\Open_Set_Family O1 X1/\Open_Set_Family O2 X2/\(forall U:Set,(Complement_Set X2 U) ∈ O2->(Complement_Set X1 (Sub_Set_Map_Pull_Backe f X1 X2 U)) ∈ O1)->Continuous_Map f O1 X1 O2 X2.
+Proof.
+intros.
+destruct H.
+destruct H0.
+destruct H1.
+split.
+apply H.
+split.
+apply H0.
+split.
+apply H1.
+
+intros.
+assert (Complement_Set X1 (Complement_Set X1 (Sub_Set_Map_Pull_Backe f X1 X2 U))=Complement_Set X1 (Sub_Set_Map_Pull_Backe f X1 X2 (Complement_Set X2 U))).
+apply Axiom_of_Extensionality.
+intro.
+split.
+intro.
+apply Complement_Set_Law_1 in H4.
+destruct H4.
+apply Complement_Set_Law_1.
+split.
+apply H4.
+intro.
+apply H5.
+apply Sub_Set_Map_Pull_Backe_Law_1 in H6.
+destruct H6.
+destruct H7.
+destruct H7.
+apply Complement_Set_Law_1 in H7.
+destruct H7.
+apply Complement_Set_Law_1.
+split.
+apply H4.
+intro.
+apply H9.
+apply Sub_Set_Map_Pull_Backe_Law_1 in H10.
+destruct H10.
+destruct H11.
+destruct H11.
+rewrite -> H8.
+rewrite <- H12.
+apply H11.
+intro.
+apply Complement_Set_Law_1 in H4.
+destruct H4.
+apply Complement_Set_Law_1.
+split.
+apply H4.
+intro.
+apply H5.
+apply Complement_Set_Law_1 in H6.
+destruct H6.
+apply Sub_Set_Map_Pull_Backe_Law_1.
+split.
+apply H6.
+exists (Culculateion_Map f z).
+split.
+apply Complement_Set_Law_1.
+split.
+apply (Map_Law_2 f X1 X2 z).
+split.
+apply H.
+apply H4.
+intro.
+apply H7.
+apply Sub_Set_Map_Pull_Backe_Law_1.
+split.
+apply H4.
+exists (Culculateion_Map f z).
+split.
+apply H8.
+split.
+split.
+
+rewrite <- (Complement_Set_Law_4 (Sub_Set_Map_Pull_Backe f X1 X2 U) X1).
+rewrite -> H4.
+apply H2.
+rewrite -> (Complement_Set_Law_4 U X2).
+apply H3.
+apply (Open_Set_Family_Law_1 U O2 X2).
+split.
+apply H1.
+apply H3.
+intro.
+intro.
+apply Sub_Set_Map_Pull_Backe_Law_1 in H5.
+destruct H5.
+apply H5.
+Qed.
+
+
+
+Definition Homeomorphic_Map(f O1 X1 O2 X2:Set):=Bijective_Map f X1 X2/\Continuous_Map f O1 X1 O2 X2/\Continuous_Map (Inverse_Map f X1 X2) O2 X2 O1 X1.
+
+Theorem Homeomorphic_Map_Law_1:forall X O:Set,Open_Set_Family O X->Homeomorphic_Map (Identify_Map X) O X O X.
+Proof.
+intros.
+split.
+apply Identify_Map_Law_2.
+split.
+apply Continuous_Map_Law_1.
+apply H.
+split.
+apply Inverse_Map_Law_6.
+apply Identify_Map_Law_2.
+split.
+apply H.
+split.
+apply H.
+intros.
+
+assert (Sub_Set_Map_Pull_Backe (Inverse_Map (Identify_Map X) X X) X X U=U).
+apply Axiom_of_Extensionality.
+intro.
+split.
+intro.
+apply Sub_Set_Map_Pull_Backe_Law_1 in H1.
+destruct H1.
+destruct H2.
+destruct H2.
+assert (Culculateion_Map (Inverse_Map (Identify_Map X) X X) z=z).
+assert (Culculateion_Map (Identify_Map X) x=Culculateion_Map (Identify_Map X) (Culculateion_Map (Inverse_Map (Identify_Map X) X X) z)).
+rewrite <- H3.
+split.
+rewrite -> (Composite_Map_Law_2 (Inverse_Map (Identify_Map X) X X) (Identify_Map X) z X X X) in H4.
+rewrite <- (Inverse_Map_Law_5 (Identify_Map X) X X) in H4.
+rewrite <- (Identify_Map_Law_3 X x) in H4.
+rewrite <- (Identify_Map_Law_3 X z) in H4.
+rewrite <- H3.
+apply H4.
+apply H1.
+apply (Open_Set_Family_Law_1 U O X).
+split.
+apply H.
+apply H0.
+apply H2.
+apply Identify_Map_Law_2.
+split.
+apply Inverse_Map_Law_2.
+apply Identify_Map_Law_2.
+split.
+apply Identify_Map_Law_4.
+apply H1.
+rewrite <- H4.
+rewrite <- H3.
+apply H2.
+intro.
+apply Sub_Set_Map_Pull_Backe_Law_1.
+split.
+apply (Open_Set_Family_Law_1 U O X).
+split.
+apply H.
+apply H0.
+apply H1.
+exists (Culculateion_Map (Inverse_Map (Identify_Map X) X X) z).
+split.
+assert (Culculateion_Map (Inverse_Map (Identify_Map X) X X) z=).
+assert (Culculateion_Map (Identify_Map X) z=Culculateion_Map (Identify_Map X) (Culculateion_Map (Inverse_Map (Identify_Map X) X X) z)).
+rewrite -> (Composite_Map_Law_2 (Inverse_Map (Identify_Map X) X X) (Identify_Map X) z X X X).
+rewrite <- (Inverse_Map_Law_5 (Identify_Map X) X X).
+rewrite  <- (Identify_Map_Law_3 X z).
+split.
+apply (Open_Set_Family_Law_1 U O X).
+split.
+apply H.
+apply H0.
+apply H1.
+apply Identify_Map_Law_2.
+split.
+apply Inverse_Map_Law_2.
+apply Identify_Map_Law_2.
+split.
+apply Identify_Map_Law_4.
+apply (Open_Set_Family_Law_1 U O X).
+split.
+apply H.
+apply H0.
+apply H1.
+apply 
+Qed.
+
+Theorem Homeomorphic_Map_Law_2:forall f1 f2 O1 X1 O2 X2 O3 X3:Set,Homeomorphic_Map f1 O1 X1 O2 X2/\Homeomorphic_Map f2 O2 X2 O3 X3->Homeomorphic_Map (Composite_Map f1 f2) O1 X1 O3 X3.
+Proof.
+
+Qed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

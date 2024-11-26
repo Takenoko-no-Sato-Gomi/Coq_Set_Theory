@@ -108,7 +108,7 @@ rewrite <- H6.
 apply H5.
 Qed.
 
-Theorem Map_Law_4:forall f h X Y:Set,(Map f X Y/\Map h X Y/\(forall x:Set,x ∈ X->(Culculateion_Map f x=Culculateion_Map h x))->f=h).
+Theorem Map_Law_4:forall f h X Y:Set,Map f X Y/\Map h X Y/\(forall x:Set,x ∈ X->(Culculateion_Map f x=Culculateion_Map h x))->f=h.
 Proof.
 assert (forall f h X Y:Set,(Map f X Y/\Map h X Y/\(forall x:Set,x ∈ X->(Culculateion_Map f x=Culculateion_Map h x)))->(forall z:Set,z ∈ f->z ∈ h)).
 intro.
@@ -197,41 +197,40 @@ rewrite -> H3.
 split.
 Qed.
 
-Theorem Map_Law_5:forall f X Y Y0:Set,Map f X Y/\Y0 ⊂ Y/\(forall x:Set,x ∈ X->(Culculateion_Map f x) ∈ Y0)->Map f X Y0.
+Theorem Map_Law_5:forall f X Y Y0:Set,Map f X Y/\(forall x:Set,x ∈ X->(Culculateion_Map f x) ∈ Y0)->Map f X Y0.
 Proof.
 intros.
 destruct H.
-destruct H0.
 split.
 
 intros.
 assert (Map f X Y).
 apply H.
-destruct H3.
+destruct H2.
 assert (a ∈ f).
-apply H2.
-apply H3 in H2.
-destruct H2.
-destruct H2.
-destruct H2.
-destruct H6.
+apply H1.
+apply H2 in H1.
+destruct H1.
+destruct H1.
+destruct H1.
+destruct H5.
 exists x.
 exists x0.
 split.
-apply H2.
+apply H1.
 split.
 rewrite -> (Map_Law_3 f X Y x x0).
+apply H0.
 apply H1.
-apply H2.
 split.
 apply H.
 split.
-apply H2.
+apply H1.
 split.
-apply H6.
-rewrite <- H7.
 apply H5.
-apply H7.
+rewrite <- H6.
+apply H4.
+apply H6.
 
 intros.
 exists (Culculateion_Map f x).
@@ -240,21 +239,29 @@ split.
 apply (Map_Law_1 f X Y x).
 split.
 apply H.
-apply H2.
 apply H1.
-apply H2.
+apply H0.
+apply H1.
 intros.
-destruct H3.
+destruct H2.
 symmetry.
 apply (Map_Law_3 f X Y x x').
 split.
 apply H.
 split.
-apply H2.
+apply H1.
 split.
-apply H0.
-apply H4.
-apply H3.
+destruct H.
+apply H in H2.
+destruct H2.
+destruct H2.
+destruct H2.
+destruct H5.
+apply Ordered_Set_Law_2 in H6.
+destruct H6.
+rewrite -> H7.
+apply H5.
+apply H2.
 Qed.
 
 

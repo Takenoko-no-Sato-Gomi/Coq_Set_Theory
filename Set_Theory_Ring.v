@@ -586,7 +586,7 @@ apply H.
 apply H1.
 Qed.
 
-Theorem Ring_Law_10:forall f g R:Set,Ring f g R/\Zero_Ring f g R->Identify_Element f R=Identify_Element g R.
+Theorem Ring_Law_10:forall f g R:Set,Zero_Ring f g R->Identify_Element f R=Identify_Element g R.
 Proof.
 intros.
 destruct H.
@@ -1292,7 +1292,57 @@ apply H4.
 apply H5.
 Qed.
 
-Theorem Ring_invertible_Set_Law_3:forall f g R x:Set,Ring f g R/\x ∈ (Ring_invertible_Set f g R)->Operation g x (Reverse_Element g R x)=Identify_Element g R.
+Theorem Ring_invertible_Set_Law_3:forall f g R x:Set,Ring f g R/\x ∈ (Ring_invertible_Set f g R)->(Reverse_Element g R x) ∈ R.
+Proof.
+intros.
+destruct H.
+apply Ring_invertible_Set_Law_1 in H0.
+destruct H0.
+destruct H1.
+destruct H1.
+destruct H2.
+
+assert ((Reverse_Element g R x) ∈ R/\(Operation g x (Reverse_Element g R x))=(Identify_Element g R)/\(Operation g (Reverse_Element g R x) x)=(Identify_Element g R)).
+apply (Well_Defined_1 (fun x'=>x' ∈ R/\(Operation g x x')=(Identify_Element g R)/\(Operation g x' x)=(Identify_Element g R))).
+exists x0.
+split.
+split.
+apply H1.
+split.
+apply H2.
+apply H3.
+intros.
+destruct H4.
+destruct H5.
+rewrite <- (Monoid_Law_6 g R x0).
+rewrite <- H5.
+rewrite -> (Monoid_Law_2 g R x0 x x').
+rewrite -> H3.
+apply (Monoid_Law_7 g R x').
+split.
+apply (Ring_Law_2 f g R).
+apply H.
+apply H4.
+split.
+apply (Ring_Law_2 f g R).
+apply H.
+split.
+apply H1.
+split.
+apply H0.
+apply H4.
+split.
+apply (Ring_Law_2 f g R).
+apply H.
+apply H1.
+destruct H4.
+destruct H5.
+
+apply H4.
+Qed.
+
+
+Theorem Ring_invertible_Set_Law_4:forall f g R x:Set,Ring f g R/\x ∈ (Ring_invertible_Set f g R)->Operation g x (Reverse_Element g R x)=Identify_Element g R.
 Proof.
 intros.
 destruct H.
@@ -1341,7 +1391,7 @@ destruct H5.
 apply H5.
 Qed.
 
-Theorem Ring_invertible_Set_Law_4:forall f g R x:Set,Ring f g R/\x ∈ (Ring_invertible_Set f g R)->Operation g (Reverse_Element g R x) x=Identify_Element g R.
+Theorem Ring_invertible_Set_Law_5:forall f g R x:Set,Ring f g R/\x ∈ (Ring_invertible_Set f g R)->Operation g (Reverse_Element g R x) x=Identify_Element g R.
 Proof.
 intros.
 destruct H.
@@ -1390,7 +1440,7 @@ destruct H5.
 apply H6.
 Qed.
 
-Theorem Ring_invertible_Set_Law_5:forall f g R x:Set,Ring f g R/\x ∈ (Ring_invertible_Set f g R)->Ring_non_zero_divisor_element f g R x.
+Theorem Ring_invertible_Set_Law_6:forall f g R x:Set,Ring f g R/\x ∈ (Ring_invertible_Set f g R)->Ring_non_zero_divisor_element f g R x.
 Proof.
 intros.
 destruct H.
@@ -1471,7 +1521,7 @@ apply H1.
 apply H0.
 Qed.
 
-Theorem Field_Law_4:forall f g F:Set,Field f g F->Integral_Domain f g F.
+Theorem Field_Law_3:forall f g F:Set,Field f g F->Integral_Domain f g F.
 Proof.
 intros.
 destruct H.
@@ -1483,7 +1533,7 @@ destruct H1.
 left.
 apply H1.
 right.
-apply (Ring_invertible_Set_Law_5 f g F x).
+apply (Ring_invertible_Set_Law_6 f g F x).
 split.
 apply Comutive_Ring_Law_1.
 apply H.

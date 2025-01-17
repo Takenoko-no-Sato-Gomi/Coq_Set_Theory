@@ -442,11 +442,66 @@ apply H1.
 apply H0.
 Qed.
 
-(*整列順序*)
-Definition Well_Oredered_Relation(f X:Set):=Totaly_Ordered_Relation f X/\(forall Y:Set,(Y ⊂ X/\~Y=∅)->exists a:Set,Minimum_Element f Y a).
+
 
 (*狭義整列順序*)
 Definition Narrow_Well_Oredered_Relation(f X:Set):=Relation f X/\Transitive_Law f X/\(forall x y:Set,(x ∈ X/\y ∈ X)->(Relation_Prop f x y\/x=y\/Relation_Prop f y x))/\(forall x:Set,x ∈ X->~Relation_Prop f x x)/\(forall Y:Set,(Y ⊂ X/\~Y=∅)->exists a:Set,a ∈ Y/\forall x:Set,(x ∈ Y/\~a=x)->Relation_Prop f a x).
+
+Theorem Narrow_Well_Oredered_Relation_Law_1:forall f X:Set,Narrow_Well_Oredered_Relation f X->Relation f X.
+Proof.
+intros.
+destruct H.
+apply H.
+Qed.
+
+Theorem Narrow_Well_Oredered_Relation_Law_2:forall f X x y z:Set,(Narrow_Well_Oredered_Relation f X/\Relation_Prop f x y/\Relation_Prop f y z)->Relation_Prop f x z.
+Proof.
+intros.
+destruct H.
+destruct H.
+destruct H1.
+apply (H1 x y z).
+apply H0.
+Qed.
+
+Theorem Narrow_Well_Oredered_Relation_Law_3:forall f X x y:Set,Narrow_Well_Oredered_Relation f X/\x ∈ X/\y ∈ X->(Relation_Prop f x y\/x=y\/Relation_Prop f y x).
+Proof.
+intros.
+destruct H.
+destruct H.
+destruct H1.
+apply H2.
+apply H0.
+Qed.
+
+Theorem Narrow_Well_Oredered_Relation_Law_4:forall f X x:Set,Narrow_Well_Oredered_Relation f X/\x ∈ X->~Relation_Prop f x x.
+Proof.
+intros.
+destruct H.
+destruct H.
+destruct H1.
+destruct H2.
+destruct H3.
+apply H3.
+apply H0.
+Qed.
+
+Theorem Narrow_Well_Oredered_Relation_Law_5:forall f X Y:Set,Narrow_Well_Oredered_Relation f X/\Y ⊂ X/\~Y=∅->(exists a:Set,a ∈ Y/\(forall x:Set,(x ∈ Y/\~a=x)->Relation_Prop f a x)).
+Proof.
+intros.
+destruct H.
+destruct H.
+destruct H1.
+destruct H2.
+destruct H3.
+apply H4.
+apply H0.
+Qed.
+
+
+
+(*整列順序*)
+Definition Well_Oredered_Relation(f X:Set):=Totaly_Ordered_Relation f X/\(forall Y:Set,(Y ⊂ X/\~Y=∅)->exists a:Set,Minimum_Element f Y a).
 
 Theorem Well_Oredered_Relation_Law_1:forall f X a0:Set,a0 ∈ (Prop_Set (fun a=>a ∈ f/\(forall x:Set,~a=Ordered_Set x x)))<->a0 ∈ f/\(forall x:Set,~a0=Ordered_Set x x).
 Proof.
@@ -784,7 +839,7 @@ apply H7.
 
 intro.
 intros.
-assert (x ∈ X /\ y ∈ X).
+assert (x ∈ X/\y ∈ X).
 apply H5.
 apply H1 in H5.
 destruct H5.
@@ -832,6 +887,22 @@ apply H7.
 split.
 apply H8.
 apply H9.
+Qed.
+
+Theorem Well_Oredered_Relation_Law_5:forall f X:Set,Well_Oredered_Relation f X->Totaly_Ordered_Relation f X.
+Proof.
+intros.
+destruct H.
+apply H.
+Qed.
+
+Theorem Well_Oredered_Relation_Law_6:forall f X Y:Set,(Well_Oredered_Relation f X/\Y ⊂ X/\~Y=∅)->exists a:Set,Minimum_Element f Y a.
+Proof.
+intros.
+destruct H.
+destruct H.
+apply H1.
+apply H0.
 Qed.
 
 
@@ -1552,395 +1623,68 @@ Theorem Predecessor_Set_Law_2:forall f X x:Set,(x ∈ X/\Well_Oredered_Relation 
 Proof.
 intros.
 destruct H.
-destruct H0.
-destruct H0.
-
-assert ((Predecessor_Set f X x) ⊂ X).
+apply (Restriction_Relation_Law_8 f X (Predecessor_Set f X x)).
+split.
 intro.
 intro.
-apply Predecessor_Set_Law_1 in H3.
-destruct H3.
-apply H3.
-
-split.
-split.
-split.
-apply (Restriction_Relation_Law_2 f X (Predecessor_Set f X x)).
-split.
-apply H3.
-destruct H0.
+apply Predecessor_Set_Law_1 in H1.
+destruct H1.
+apply H1.
 apply H0.
-
-split.
-intro.
-intros.
-apply (Restriction_Relation_Law_3 f X (Predecessor_Set f X x)).
-split.
-apply H3.
-split.
-destruct H0.
-apply H0.
-split.
-apply H4.
-split.
-apply H4.
-apply Predecessor_Set_Law_1 in H4.
-destruct H4.
-destruct H0.
-destruct H6.
-apply H6.
-apply H4.
-
-split.
-intro.
-intros.
-destruct H4.
-apply (Restriction_Relation_Law_3 f X (Predecessor_Set f X x)).
-split.
-apply H3.
-split.
-destruct H0.
-apply H0.
-split.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)) in H4.
-destruct H4.
-destruct H6.
-destruct H6.
-destruct H6.
-destruct H7.
-apply Ordered_Set_Law_2 in H8.
-destruct H8.
-rewrite -> H8.
-apply H6.
-split.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)) in H5.
-destruct H5.
-destruct H6.
-destruct H6.
-destruct H6.
-destruct H7.
-apply Ordered_Set_Law_2 in H8.
-destruct H8.
-rewrite -> H9.
-apply H7.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)) in H4.
-destruct H4.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)) in H5.
-destruct H5.
-destruct H0.
-destruct H8.
-destruct H9.
-apply (H9 x0 y z).
-split.
-apply H4.
-apply H5.
-
-intro.
-intros.
-destruct H4.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)) in H4.
-destruct H4.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)) in H5.
-destruct H5.
-destruct H0.
-destruct H8.
-destruct H9.
-apply H10.
-split.
-apply H4.
-apply H5.
-
-intro.
-intros.
-destruct H4.
-apply Predecessor_Set_Law_1 in H4.
-destruct H4.
-apply Predecessor_Set_Law_1 in H5.
-destruct H5.
-assert (x0 ∈ X/\y ∈ X).
-split.
-apply H4.
-apply H5.
-apply H2 in H8.
-destruct H8.
-left.
-apply Restriction_Relation_Law_1.
-split.
-apply H8.
-exists x0.
-exists y.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H4.
-apply H6.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H5.
-apply H7.
-split.
-right.
-apply Restriction_Relation_Law_1.
-split.
-apply H8.
-exists y.
-exists x0.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H5.
-apply H7.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H4.
-apply H6.
-split.
-
-intros.
-destruct H4.
-assert (Y ⊂ X/\~Y=∅).
-split.
-intro.
-intro.
-apply H4 in H6.
-apply Predecessor_Set_Law_1 in H6.
-destruct H6.
-apply H6.
-apply H5.
-apply H1 in H6.
-destruct H6.
-destruct H6.
-exists x0.
-split.
-apply H6.
-intros.
-assert (x1 ∈ Y).
-apply H8.
-apply H7 in H8.
-apply Restriction_Relation_Law_1.
-split.
-apply H8.
-exists x0.
-exists x1.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H4 in H6.
-apply Predecessor_Set_Law_1 in H6.
-destruct H6.
-apply H6.
-apply H4 in H6.
-apply Predecessor_Set_Law_1 in H6.
-destruct H6.
-apply H10.
-split.
-apply Predecessor_Set_Law_1.
-split.
-destruct H0.
-apply H0 in H8.
-destruct H8.
-destruct H8.
-destruct H8.
-destruct H11.
-apply Ordered_Set_Law_2 in H8.
-destruct H8.
-rewrite -> H13.
-apply H12.
-apply H4 in H9.
-apply Predecessor_Set_Law_1 in H9.
-destruct H9.
-apply H10.
-split.
 Qed.
 
 Theorem Predecessor_Set_Law_3:forall f X x:Set,(x ∈ X/\Narrow_Well_Oredered_Relation f X)->Narrow_Well_Oredered_Relation (Restriction_Relation f (Predecessor_Set f X x)) (Predecessor_Set f X x).
 Proof.
 intros.
 destruct H.
-destruct H0.
+apply (Restriction_Relation_Law_9 f X (Predecessor_Set f X x)).
+split.
+intro.
+intro.
+apply Predecessor_Set_Law_1 in H1.
 destruct H1.
-destruct H2.
-destruct H3.
-
-assert ((Predecessor_Set f X x) ⊂ X).
-intro.
-intro.
-apply Predecessor_Set_Law_1 in H5.
-destruct H5.
-apply H5.
-
-split.
-apply (Restriction_Relation_Law_2 f X (Predecessor_Set f X x)).
-split.
-apply H5.
+apply H1.
 apply H0.
+Qed.
 
+
+
+Definition Predecessor_Set_1(f X x:Set):=Prop_Set (fun y=>y ∈ X/\Relation_Prop f y x/\~y=x).
+
+Theorem Predecessor_Set_1_Law_1:forall f X x y:Set,y ∈ (Predecessor_Set_1 f X x)<->y ∈ X/\Relation_Prop f y x/\~y=x.
+Proof.
+intros.
+apply Prop_Set_Law_1.
+exists X.
+intros.
+destruct H.
+apply H.
+Qed.
+
+Theorem Predecessor_Set_1_Law_2:forall f X x:Set,(x ∈ X/\Well_Oredered_Relation f X)->Well_Oredered_Relation (Restriction_Relation f (Predecessor_Set_1 f X x)) (Predecessor_Set_1 f X x).
+Proof.
+intros.
+destruct H.
+apply (Restriction_Relation_Law_8 f X (Predecessor_Set_1 f X x)).
 split.
 intro.
-intros.
-destruct H6.
-apply (Restriction_Relation_Law_3 f X (Predecessor_Set f X x)).
-split.
-apply H5.
-split.
+intro.
+apply Predecessor_Set_1_Law_1 in H1.
+destruct H1.
+apply H1.
 apply H0.
-split.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)) in H6.
-destruct H6.
-destruct H8.
-destruct H8.
-destruct H8.
-destruct H9.
-apply Ordered_Set_Law_2 in H10.
-destruct H10.
-rewrite -> H10.
-apply H8.
-split.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)) in H7.
-destruct H7.
-destruct H8.
-destruct H8.
-destruct H8.
-destruct H9.
-apply Ordered_Set_Law_2 in H10.
-destruct H10.
-rewrite -> H11.
-apply H9.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)) in H6.
-destruct H6.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)) in H7.
-destruct H7.
-apply (H1 x0 y z).
-split.
-apply H6.
-apply H7.
+Qed.
 
-split.
+Theorem Predecessor_Set_1_Law_3:forall f X x:Set,(x ∈ X/\Narrow_Well_Oredered_Relation f X)->Narrow_Well_Oredered_Relation (Restriction_Relation f (Predecessor_Set_1 f X x)) (Predecessor_Set_1 f X x).
+Proof.
 intros.
-destruct H6.
-apply Predecessor_Set_Law_1 in H6.
-destruct H6.
-apply Predecessor_Set_Law_1 in H7.
-destruct H7.
-assert (x0 ∈ X/\y ∈ X).
-split.
-apply H6.
-apply H7.
-apply H2 in H10.
-destruct H10.
-left.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)).
-split.
-apply H10.
-exists x0.
-exists y.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H6.
-apply H8.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H7.
-apply H9.
-split.
-right.
-destruct H10.
-left.
-apply H10.
-right.
-apply (Restriction_Relation_Law_1 f (Predecessor_Set f X x)).
-split.
-apply H10.
-exists y.
-exists x0.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H7.
-apply H9.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H6.
-apply H8.
-split.
-
-split.
-intros.
-apply Predecessor_Set_Law_1 in H6.
-destruct H6.
-assert (x0 ∈ X).
-apply H6.
-apply H3 in H6.
-intro.
-apply H6.
-apply (Restriction_Relation_Law_4 f X (Predecessor_Set f X x) x0 x0).
+destruct H.
+apply (Restriction_Relation_Law_9 f X (Predecessor_Set_1 f X x)).
 split.
 intro.
 intro.
-apply Predecessor_Set_Law_1 in H10.
-destruct H10.
-apply H10.
-split.
+apply Predecessor_Set_1_Law_1 in H1.
+destruct H1.
+apply H1.
 apply H0.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H8.
-apply H7.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H8.
-apply H7.
-apply H9.
-
-intros.
-destruct H6.
-assert (Y ⊂ X/\~Y=∅).
-split.
-intro.
-intro.
-apply H6 in H8.
-apply Predecessor_Set_Law_1 in H8.
-destruct H8.
-apply H8.
-apply H7.
-apply H4 in H8.
-destruct H8.
-destruct H8.
-exists x0.
-split.
-apply H8.
-intros.
-assert (x1 ∈ Y).
-destruct H10.
-apply H10.
-apply H9 in H10.
-apply Restriction_Relation_Law_1.
-split.
-apply H10.
-exists x0.
-exists x1.
-split.
-apply Predecessor_Set_Law_1.
-split.
-apply H6 in H8.
-apply Predecessor_Set_Law_1 in H8.
-destruct H8.
-apply H8.
-apply H6 in H8.
-apply Predecessor_Set_Law_1 in H8.
-destruct H8.
-apply H12.
-split.
-apply Predecessor_Set_Law_1.
-apply H6 in H11.
-apply Predecessor_Set_Law_1 in H11.
-apply H11.
-split.
 Qed.

@@ -80,6 +80,8 @@ apply H1.
 left.
 exists n.
 split.
+apply H.
+split.
 Qed.
 
 Theorem Peanos_Axiom_3:forall n m:Set,(n ∈ Natural_Number_Set/\m ∈ Natural_Number_Set/\Ordered_Next n=Ordered_Next m)->n=m.
@@ -180,6 +182,7 @@ destruct H8.
 destruct H8.
 destruct (Law_of_Excluded_Middle (x0 ∈ X)).
 destruct H5.
+destruct H8.
 rewrite <- H8.
 apply H1.
 apply H9.
@@ -191,14 +194,16 @@ apply H10 in H6.
 clear H10.
 clear H11.
 apply H6.
-rewrite <- H8.
+destruct H8.
+rewrite <- H10.
 apply Ordered_Number_Law_8.
 right.
 split.
 apply H9.
 apply H4 in H10.
 destruct H10.
-rewrite <- H8.
+destruct H8.
+rewrite <- H10.
 apply Ordered_Number_Law_8.
 right.
 split.
@@ -1116,20 +1121,156 @@ apply H.
 apply H0.
 Qed.
 
-Theorem Nat_Add_Law_12:forall n1 n2:Set,n1 ∈ Natural_Number_Set/\n2 ∈ Natural_Number_Set->(exists n3:Set,n1=Culculateion_Map Nat_Add (Ordered_Set n2 n3))\/(exists n3:Set,Culculateion_Map Nat_Add (Ordered_Set n1 n3)=n2).
+Theorem Nat_Add_Law_12:forall n1 n2:Set,n1 ∈ Natural_Number_Set/\n2 ∈ Natural_Number_Set/\n1 ∈ n2->(exists n3:Set,n3 ∈ Natural_Number_Set/\n2=Culculateion_Map Nat_Add (Ordered_Set n1 n3)).
 Proof.
 intros.
 destruct H.
-assert (Ordered_Number n1/\Ordered_Number n2).
+destruct H0.
+assert (forall a:Set,a ∈ Natural_Number_Set->(a ∈ n2->exists a0:Set,a0 ∈ Natural_Number_Set/\n2 = Culculateion_Map Nat_Add (Ordered_Set a a0))).
+apply (Mathemetical_Induction_1 (fun a=>a ∈ n2->exists a0:Set,a0 ∈ Natural_Number_Set/\n2 = Culculateion_Map Nat_Add (Ordered_Set a a0))).
 split.
-apply Natural_Number_Set_Law_1.
-apply H.
-apply Natural_Number_Set_Law_1.
+intro.
+exists n2.
+split.
 apply H0.
-apply Ordered_Number_Law_5 in H1.
-destruct H1.
-left.
+symmetry.
+apply (Nat_Add_Law_5 n2).
+apply H0.
+intros.
+destruct H2.
+assert (n ∈ n2).
+apply (Ordered_Number_Law_4 n (Ordered_Next n) n2).
+split.
+apply Natural_Number_Set_Law_1 in H2.
+destruct H2.
+apply H2.
+split.
+apply Ordered_Number_Law_9.
+apply Natural_Number_Set_Law_1 in H2.
+destruct H2.
+apply H2.
+split.
+apply Natural_Number_Set_Law_1 in H0.
+destruct H0.
+apply H0.
+split.
+apply Ordered_Number_Law_8.
+right.
+split.
+apply H3.
+apply H4 in H5.
+destruct H5.
+destruct H5.
+assert (~x=∅).
+intro.
+rewrite -> H7 in H6.
+rewrite -> (Nat_Add_Law_4 n) in H6.
+destruct (Ordered_Number_Law_6 n2).
+apply Natural_Number_Set_Law_1 in H0.
+destruct H0.
+apply H0.
+apply (Ordered_Number_Law_4 n2 (Ordered_Next n) n2).
+split.
+apply Natural_Number_Set_Law_1 in H0.
+destruct H0.
+apply H0.
+split.
+apply Ordered_Number_Law_9.
+apply Natural_Number_Set_Law_1 in H2.
+destruct H2.
+apply H2.
+split.
+apply Natural_Number_Set_Law_1 in H0.
+destruct H0.
+apply H0.
+split.
+apply Ordered_Number_Law_8.
+right.
+apply H6.
+apply H3.
+apply H2.
+assert (x ∈ Natural_Number_Set).
+apply H5.
+apply Natural_Number_Set_Law_1 in H8.
+destruct H8.
+destruct H9.
+destruct H10.
+destruct H10.
+destruct H10.
+exists x0.
+split.
+apply (Ordered_Number_Law_4 x0 x Natural_Number_Set).
+split.
+apply H10.
+split.
+apply Natural_Number_Set_Law_1 in H5.
+destruct H5.
+apply H5.
+split.
+apply Natural_Number_Set_Law_2.
+split.
+rewrite <- H11.
+apply Ordered_Number_Law_8.
+right.
+split.
+apply H5.
+rewrite <- (Nat_Add_Law_7 n x0).
+rewrite -> (Nat_Add_Law_6 n x0).
+rewrite -> H11.
+apply H6.
+split.
+apply H2.
+apply (Ordered_Number_Law_4 x0 x Natural_Number_Set).
+split.
+apply H10.
+split.
+apply Natural_Number_Set_Law_1 in H5.
+destruct H5.
+apply H5.
+split.
+apply Natural_Number_Set_Law_2.
+split.
+rewrite <- H11.
+apply Ordered_Number_Law_8.
+right.
+split.
+apply H5.
+split.
+apply H2.
+apply (Ordered_Number_Law_4 x0 x Natural_Number_Set).
+split.
+apply H10.
+split.
+apply Natural_Number_Set_Law_1 in H5.
+destruct H5.
+apply H5.
+split.
+apply Natural_Number_Set_Law_2.
+split.
+rewrite <- H11.
+apply Ordered_Number_Law_8.
+right.
+split.
+apply H5.
+destruct H7.
+apply H10.
+apply H2.
+apply H.
+apply H1.
+Qed.
 
+Theorem Nat_Add_Law_13:forall n1 n2:Set,n1 ∈ Natural_Number_Set/\n2 ∈ Natural_Number_Set->Culculateion_Map Nat_Add (Ordered_Set n1 n2) ∈ Natural_Number_Set.
+Proof.
+intros.
+apply (Map_Law_2 Nat_Add (Double_Direct_Product_Set Natural_Number_Set Natural_Number_Set) Natural_Number_Set (Ordered_Set n1 n2)).
+split.
+apply Nat_Add_Law_2.
+apply Double_Direct_Product_Set_Law_1.
+exists n1.
+exists n2.
+split.
+split.
+apply H.
 Qed.
 
 
@@ -2456,6 +2597,16 @@ Proof.
 
 Qed.
 
-
-
-
+Theorem Nat_Multi_Law_14:forall n1 n2:Set,n1 ∈ Natural_Number_Set/\n2 ∈ Natural_Number_Set->Culculateion_Map Nat_Multi (Ordered_Set n1 n2) ∈ Natural_Number_Set.
+Proof.
+intros.
+apply (Map_Law_2 Nat_Multi (Double_Direct_Product_Set Natural_Number_Set Natural_Number_Set) Natural_Number_Set (Ordered_Set n1 n2)).
+split.
+apply Nat_Multi_Law_2.
+apply Double_Direct_Product_Set_Law_1.
+exists n1.
+exists n2.
+split.
+split.
+apply H.
+Qed.

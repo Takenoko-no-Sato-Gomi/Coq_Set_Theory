@@ -1187,7 +1187,7 @@ Qed.
 
 
 (*自然数*)
-Definition Natural_Number(n:Set):=Ordered_Number n/\(forall x:Set,x ∈n->((exists y:Set,Ordered_Next y=x)\/x=∅))/\((exists y:Set,Ordered_Next y=n)\/n=∅).
+Definition Natural_Number(n:Set):=Ordered_Number n/\(forall x:Set,x ∈n->((exists y:Set,Ordered_Number y/\Ordered_Next y=x)\/x=∅))/\((exists y:Set,Ordered_Number y/\Ordered_Next y=n)\/n=∅).
 
 Definition Natural_Number_Set:=Prop_Set (fun n=>Natural_Number n).
 
@@ -1245,6 +1245,7 @@ apply H0.
 apply H1 in H0.
 destruct H0.
 destruct H0.
+destruct H0.
 assert (x2 ∈ Complement_Set (Ordered_Next x0) x).
 apply Complement_Set_Law_1.
 split.
@@ -1253,18 +1254,18 @@ left.
 destruct H6.
 apply H6 in H8.
 apply H8.
-rewrite <- H0.
+rewrite <- H9.
 apply Ordered_Number_Law_8.
 right.
 split.
-rewrite <- H0 in H7.
+rewrite <- H9 in H7.
 intro.
 apply H7.
 apply H3.
-apply H9.
-apply H5 in H9.
-destruct H9.
-rewrite <- H0.
+apply H10.
+apply H5 in H10.
+destruct H10.
+rewrite <- H9.
 apply Ordered_Number_Law_8.
 right.
 split.
@@ -1273,24 +1274,25 @@ rewrite -> H0.
 apply H.
 destruct H2.
 destruct H2.
+destruct H2.
 assert (x2 ∈ Complement_Set (Ordered_Next x0) x).
 apply Complement_Set_Law_1.
 split.
 apply Ordered_Number_Law_8.
 left.
-rewrite <- H2.
+rewrite <- H8.
 apply Ordered_Number_Law_8.
 right.
 split.
 intro.
 apply H4.
-rewrite <- H2.
+rewrite <- H8.
 apply H3.
-apply H8.
-apply H5 in H8.
-destruct H8.
+apply H9.
+apply H5 in H9.
+destruct H9.
 rewrite -> H0.
-rewrite <- H2.
+rewrite <- H8.
 apply Ordered_Number_Law_8.
 right.
 split.
